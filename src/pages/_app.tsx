@@ -3,6 +3,8 @@ import { SessionProvider } from "next-auth/react";
 import { type AppType } from "next/app";
 import { api } from "~/utils/api";
 import "~/styles/globals.css";
+import Links from "~/c/Links";
+import Link from "next/link";
 
 const MyApp: AppType<{ session: Session | null }> = ({
   Component,
@@ -10,7 +12,20 @@ const MyApp: AppType<{ session: Session | null }> = ({
 }) => {
   return (
     <SessionProvider session={session}>
-      <Component {...pageProps} />
+      <main className="flex min-h-screen flex-col items-stretch justify-stretch bg-gradient-to-b from-[#2e026d] to-[#15162c]">
+        <div className="align-center flex bg-[#096fc3]">
+          <Link href="/">
+            <img src="./logo.png" />
+          </Link>
+          <h1 className="hidden">Nijipets</h1>
+          <div className="mr-auto"></div>
+        </div>
+        <div className="flex h-full flex-grow content-stretch justify-stretch bg-[#096fc3]">
+          <Links />
+          <Component {...pageProps} />
+        </div>
+      </main>
+      <div></div>
     </SessionProvider>
   );
 };
