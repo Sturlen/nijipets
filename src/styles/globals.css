@@ -1,3 +1,8 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@font-face {
+  font-family: Selen Font;
+  src: url("/Selen2-Regular.ttf");
+}

@@ -5,6 +5,7 @@ import { api } from "~/utils/api";
 import "~/styles/globals.css";
 import Links from "~/c/Links";
 import Link from "next/link";
+import Image from "next/image";
 
 const MyApp: AppType<{ session: Session | null }> = ({
   Component,
@@ -15,7 +16,13 @@ const MyApp: AppType<{ session: Session | null }> = ({
       <main className="flex min-h-screen flex-col items-stretch justify-stretch bg-gradient-to-b from-[#2e026d] to-[#15162c]">
         <div className="align-center flex bg-[#096fc3]">
           <Link href="/">
-            <img src="./logo.png" />
+            <Image
+              src="/logo.png"
+              width={381}
+              height={85}
+              alt="Nijipets"
+              priority
+            />
           </Link>
           <h1 className="hidden">Nijipets</h1>
           <div className="mr-auto"></div>
