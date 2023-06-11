@@ -28,6 +28,6 @@
     "**/*.tsx",
     "**/*.cjs",
     "**/*.mjs"
-  ],
+, "drizzle.config.tsa"  ],
   "exclude": ["node_modules"]
 }

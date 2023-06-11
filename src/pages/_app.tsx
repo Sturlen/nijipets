@@ -1,11 +1,13 @@
 import { type Session } from "next-auth";
-import { SessionProvider } from "next-auth/react";
+import { SessionProvider, signIn } from "next-auth/react";
 import { type AppType } from "next/app";
 import { api } from "~/utils/api";
 import "~/styles/globals.css";
 import Links from "~/c/Links";
 import Link from "next/link";
 import Image from "next/image";
+import SignInButton from "~/c/SignInButton";
+import { Suspense } from "react";
 
 const MyApp: AppType<{ session: Session | null }> = ({
   Component,
@@ -26,6 +28,7 @@ const MyApp: AppType<{ session: Session | null }> = ({
           </Link>
           <h1 className="hidden">Nijipets</h1>
           <div className="mr-auto"></div>
+          <SignInButton />
         </div>
         <div className="flex h-full flex-grow content-stretch justify-stretch bg-[#096fc3]">
           <Links />
