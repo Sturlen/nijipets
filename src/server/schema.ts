@@ -1,6 +1,4 @@
 import {
-  int,
-  mysqlEnum,
   mysqlTable,
   serial,
   uniqueIndex,

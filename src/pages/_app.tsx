@@ -1,5 +1,5 @@
 import { type Session } from "next-auth";
-import { SessionProvider, signIn } from "next-auth/react";
+import { SessionProvider } from "next-auth/react";
 import { type AppType } from "next/app";
 import { api } from "~/utils/api";
 import "~/styles/globals.css";
@@ -7,7 +7,6 @@ import Links from "~/c/Links";
 import Link from "next/link";
 import Image from "next/image";
 import SignInButton from "~/c/SignInButton";
-import { Suspense } from "react";
 
 const MyApp: AppType<{ session: Session | null }> = ({
   Component,

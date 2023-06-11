@@ -4,7 +4,7 @@ import {
   type NextAuthOptions,
   type DefaultSession,
 } from "next-auth";
-import { OAuthConfig, OAuthUserConfig } from "next-auth/providers";
+import type { OAuthConfig, OAuthUserConfig } from "next-auth/providers";
 import { env } from "~/env.mjs";
 
 /**
@@ -46,16 +46,18 @@ export const authOptions: NextAuthOptions = {
   events: {
     linkAccount(message) {
       const { user } = message;
-      console.log(`[USER:LINK] id: ${user.id} name?: ${user.name}`);
+      console.log(`[USER:LINK] id: ${user.id} name?: ${user.name || ""}`);
     },
     signIn(message) {
       const { user } = message;
-      console.log(`[USER:SIGNIN] id: ${user.id} name?: ${user.name}`);
+      console.log(`[USER:SIGNIN] id: ${user.id} name?: ${user.name || ""}`);
     },
     signOut(message) {
       const { session, token } = message;
       console.log(
-        `[USER:SIGNOUT] id: ${token.name} name?: ${session?.user.name}`
+        `[USER:SIGNOUT] id: ${token.name || ""} name?: ${
+          session?.user.name || ""
+        }`
       );
     },
   },

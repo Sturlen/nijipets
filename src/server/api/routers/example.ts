@@ -20,7 +20,6 @@ export const exampleRouter = createTRPCRouter({
   hello: publicProcedure
     .input(z.object({ text: z.string() }))
     .query(async ({ input }) => {
-      await db.insert(users).values({ name: "" + Math.random() });
       const allUsers = await db.select().from(users);
       console.log(allUsers);
       return {
