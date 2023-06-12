@@ -1,4 +1,5 @@
 import {
+  int,
   mysqlTable,
   serial,
   uniqueIndex,
@@ -11,6 +12,7 @@ export const users = mysqlTable(
   {
     id: serial("id").primaryKey(),
     name: varchar("name", { length: 256 }),
+    discord_id: varchar("discord_id", { length: 256 }),
   },
   (users) => ({
     nameIndex: uniqueIndex("name_idx").on(users.name),
@@ -20,4 +22,6 @@ export const users = mysqlTable(
 export const pets = mysqlTable("pets", {
   id: serial("id").primaryKey(),
   name: varchar("name", { length: 256 }),
+  owner: varchar("owner", { length: 256 }),
+  color: varchar("color", { length: 7 }),
 });

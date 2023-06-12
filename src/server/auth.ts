@@ -6,6 +6,9 @@ import {
 } from "next-auth";
 import type { OAuthConfig, OAuthUserConfig } from "next-auth/providers";
 import { env } from "~/env.mjs";
+import { db } from "~/server/db";
+import { users } from "./schema";
+import { eq } from "drizzle-orm";
 
 /**
  * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`
@@ -48,10 +51,25 @@ export const authOptions: NextAuthOptions = {
       const { user } = message;
       console.log(`[USER:LINK] id: ${user.id} name?: ${user.name || ""}`);
     },
-    signIn(message) {
+    async signIn(message) {
       const { user, profile } = message;
-
       console.log(`[USER:SIGNIN] id: ${user.id} name?: ${user.name || ""} `);
+
+      const result = await db
+        .select()
+        .from(users)
+        .where(eq(users.discord_id, user.id));
+      const existing_user = result[0];
+
+      if (existing_user) {
+        console.log("user already exists");
+      } else {
+        console.log("user does not already exists, creating");
+        await db.insert(users).values({
+          name: user.name,
+          discord_id: user.id,
+        });
+      }
     },
     signOut(message) {
       const { session, token } = message;
