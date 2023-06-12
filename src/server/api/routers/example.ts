@@ -4,10 +4,8 @@ import {
   publicProcedure,
   protectedProcedure,
 } from "~/server/api/trpc";
-import { drizzle } from "drizzle-orm/planetscale-serverless";
-import { connect } from "@planetscale/database";
+
 import { pets, users } from "~/server/schema";
-import { env } from "~/env.mjs";
 import { eq } from "drizzle-orm";
 import { db } from "~/server/db";
 

@@ -14,13 +14,13 @@ const Home: NextPage = () => {
   const pet = api.example.pet.useMutation({
     onMutate: async (value) => {
       await utils.example.petbyOwnerId.cancel();
-      // @ts-expect-error
+      // @ts-expect-error tRPC queries have no key
       utils.example.petbyOwnerId.setData(undefined, {
         color: value,
       });
     },
-    onSettled() {
-      utils.example.petbyOwnerId.invalidate();
+    async onSettled() {
+      await utils.example.petbyOwnerId.invalidate();
     },
   });
 
