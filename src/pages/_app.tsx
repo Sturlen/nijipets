@@ -7,6 +7,7 @@ import Links from "~/c/Links";
 import Link from "next/link";
 import Image from "next/image";
 import SignInButton from "~/c/SignInButton";
+import MyDragoon from "~/c/MyDragoon";
 
 const MyApp: AppType<{ session: Session | null }> = ({
   Component,
@@ -26,11 +27,13 @@ const MyApp: AppType<{ session: Session | null }> = ({
             />
           </Link>
           <h1 className="hidden">Nijipets</h1>
+          <MyDragoon />
           <div className="mr-auto"></div>
           <SignInButton />
         </div>
         <div className="flex h-full flex-grow content-stretch justify-stretch bg-[#096fc3]">
           <Links />
+
           <Component {...pageProps} />
         </div>
       </main>
