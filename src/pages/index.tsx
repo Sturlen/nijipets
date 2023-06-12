@@ -29,7 +29,6 @@ const Home: NextPage = () => {
       <Head>
         <title>nijipets</title>
         <meta name="description" content="Less neo, more niji" />
-        <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className="flex flex-grow flex-col bg-white p-4">
         <section className="flex flex-col items-center">

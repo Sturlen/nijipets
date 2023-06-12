@@ -13,7 +13,7 @@ const Links: React.FC = () => {
               router.pathname === "/petcreator" ? "underline" : ""
             }`}
           >
-            Pet Creator
+            Dragoon Creator 2022
           </span>
         </Link>
         <Link href={"/nijiexpress"}>

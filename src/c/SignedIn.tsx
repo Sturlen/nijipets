@@ -1,15 +1,29 @@
 import { useSession } from "next-auth/react";
 import { ReactElement } from "react";
 
+type childrenFunc = (userId: string) => ReactElement[] | ReactElement;
+
 type SignedInProps = {
-  children?: ReactElement[] | ReactElement;
+  children: childrenFunc | ReactElement[] | ReactElement;
 };
 
 const SignedIn: React.FC<SignedInProps> = ({ children }) => {
   const { data: sessionData } = useSession();
   const userId = sessionData?.user.id;
 
-  return <>{sessionData ? children : null}</>;
+  function render() {
+    if (!userId) {
+      return null;
+    }
+
+    if (typeof children === "function") {
+      return children(userId);
+    } else {
+      return children;
+    }
+  }
+
+  return <>{render()}</>;
 };
 
 export default SignedIn;
