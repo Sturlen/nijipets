@@ -49,8 +49,9 @@ export const authOptions: NextAuthOptions = {
       console.log(`[USER:LINK] id: ${user.id} name?: ${user.name || ""}`);
     },
     signIn(message) {
-      const { user } = message;
-      console.log(`[USER:SIGNIN] id: ${user.id} name?: ${user.name || ""}`);
+      const { user, profile } = message;
+
+      console.log(`[USER:SIGNIN] id: ${user.id} name?: ${user.name || ""} `);
     },
     signOut(message) {
       const { session, token } = message;

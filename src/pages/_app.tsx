@@ -15,7 +15,7 @@ const MyApp: AppType<{ session: Session | null }> = ({
   return (
     <SessionProvider session={session}>
       <main className="flex min-h-screen flex-col items-stretch justify-stretch bg-gradient-to-b from-[#2e026d] to-[#15162c]">
-        <div className="align-center flex items-center gap-1 bg-[#096fc3]">
+        <div className="align-center flex items-center gap-4 bg-[#096fc3]">
           <Link href="/">
             <Image
               src="/logo.png"
