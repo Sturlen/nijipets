@@ -17,8 +17,8 @@ const MyApp: AppType<{ session: Session | null }> = ({
   return (
     <SessionProvider session={session}>
       <Head>
-        <link rel="icon" type="image/png" href="/dragoon_1_color.png" />
-        <meta property="og:image" content="/dragoon_1_color.png"></meta>
+        <link rel="icon" type="image/png" href="/logo.png" />
+        <meta property="og:image" content="/logo.png"></meta>
       </Head>
       <main className="flex min-h-screen flex-col items-stretch justify-stretch bg-gradient-to-b from-[#2e026d] to-[#15162c]">
         <div className="align-center flex items-center gap-4 bg-[#096fc3]">
