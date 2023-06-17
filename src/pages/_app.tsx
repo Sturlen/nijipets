@@ -1,6 +1,7 @@
 import { type Session } from "next-auth";
 import { SessionProvider } from "next-auth/react";
 import { type AppType } from "next/app";
+import { Analytics } from "@vercel/analytics/react";
 import { api } from "~/utils/api";
 import "~/styles/globals.css";
 import Links from "~/c/Links";
@@ -43,6 +44,7 @@ const MyApp: AppType<{ session: Session | null }> = ({
         </div>
       </main>
       <div></div>
+      <Analytics />
     </SessionProvider>
   );
 };

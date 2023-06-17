@@ -15,6 +15,7 @@ specifiers:
   '@types/react-dom': ^18.2.5
   '@typescript-eslint/eslint-plugin': ^5.59.11
   '@typescript-eslint/parser': ^5.59.11
+  '@vercel/analytics': ^1.0.1
   autoprefixer: ^10.4.14
   dotenv: ^16.3.0
   drizzle-kit: ^0.19.1
@@ -41,6 +42,7 @@ dependencies:
   '@trpc/next': 10.30.0_vrup2qmulxo7edv6j6femqgjea
   '@trpc/react-query': 10.30.0_7botnwtgnhytjcbcwz4zvxg64q
   '@trpc/server': 10.30.0
+  '@vercel/analytics': 1.0.1
   dotenv: 16.3.0
   drizzle-orm: 0.27.0_x5zvu6yhqtclhr76ddvo6x3wgi
   next: 13.4.6_biqbaboplfbrettd7655fr4n2y
@@ -801,6 +803,10 @@ packages:
       '@typescript-eslint/types': 5.59.11
       eslint-visitor-keys: 3.4.1
     dev: true
+
+  /@vercel/analytics/1.0.1:
+    resolution: {integrity: sha512-Ux0c9qUfkcPqng3vrR0GTrlQdqNJ2JREn/2ydrVuKwM3RtMfF2mWX31Ijqo1opSjNAq6rK76PwtANw6kl6TAow==}
+    dev: false
 
   /acorn-jsx/5.3.2_acorn@8.9.0:
     resolution: {integrity: sha512-rq9s+JNhf0IChjtDXxllJ7g41oZk5SlXtp0LHwyA5cejwn7vKmKp4pPri6YEePv2PU65sAsegbXtIinmDFDXgQ==}
