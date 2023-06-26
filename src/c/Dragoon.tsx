@@ -2,12 +2,12 @@ import { dragoon_glasses, empty_dragoon_glasses } from "~/items";
 import { PetData } from "~/types";
 
 type DragoonProps = {
-  data?: PetData | null;
+  data: Readonly<PetData>;
 };
 
 const Dragoon: React.FC<DragoonProps> = ({ data }) => {
-  const color = data?.colorHex || "#ff00ff";
-  const glasses_id = data?.glassesId || 0;
+  const color = data.color || "#ff00ff";
+  const glasses_id = data.glasses || 0;
 
   const glasses_item = dragoon_glasses[glasses_id] || empty_dragoon_glasses;
   return (

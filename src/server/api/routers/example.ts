@@ -8,6 +8,8 @@ import {
 import { pets, users } from "~/server/schema";
 import { eq } from "drizzle-orm";
 import { db } from "~/server/db";
+import { DefaultPet, PetData } from "~/types";
+import { TRPCError } from "@trpc/server";
 
 export const exampleRouter = createTRPCRouter({
   hello: publicProcedure
@@ -26,12 +28,25 @@ export const exampleRouter = createTRPCRouter({
 
   petbyOwnerId: publicProcedure.input(z.string()).query(async ({ input }) => {
     const result = await db.select().from(pets).where(eq(pets.owner, input));
-
-    return result[0];
+    const firstPet = result[0];
+    if (firstPet) {
+      const pet_data: PetData = {
+        color: firstPet.color || DefaultPet.color,
+        glasses: firstPet.glasses || DefaultPet.glasses,
+      };
+      return pet_data;
+    } else {
+      throw new TRPCError({ code: "NOT_FOUND" });
+    }
   }),
 
   pet: protectedProcedure
-    .input(z.string().startsWith("#").length(7))
+    .input(
+      z.object({
+        color: z.string().startsWith("#").length(7),
+        glasses: z.number().int().min(0),
+      })
+    )
     .mutation(async ({ input, ctx }) => {
       const userId = ctx.session.user.id;
       console.log("Color", input, userId);
@@ -40,15 +55,15 @@ export const exampleRouter = createTRPCRouter({
       const existing_pet = result[0];
 
       if (existing_pet) {
-        await db
-          .update(pets)
-          .set({ color: input })
-          .where(eq(pets.owner, userId));
+        await db.update(pets).set(input).where(eq(pets.owner, userId));
         console.log("existing", input, userId);
       } else {
-        await db
-          .insert(pets)
-          .values({ name: "goon", color: input, owner: userId });
+        await db.insert(pets).values({
+          name: "goon",
+          color: input.color,
+          glasses: input.glasses,
+          owner: userId,
+        });
         console.log("new", input, userId);
       }
     }),

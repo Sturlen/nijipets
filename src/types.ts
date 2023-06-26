@@ -1,6 +1,6 @@
 export type PetData = {
-  colorHex: string;
-  glassesId: number;
+  color: string;
+  glasses: number;
 };
 
 export type PetItem = {
@@ -10,6 +10,6 @@ export type PetItem = {
 };
 
 export const DefaultPet: Readonly<PetData> = {
-  colorHex: "#eeaaee",
-  glassesId: 0,
+  color: "#eeaaee",
+  glasses: 0,
 };

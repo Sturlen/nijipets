@@ -5,33 +5,36 @@ import Dragoon from "~/c/Dragoon";
 import SignedIn from "~/c/SignedIn";
 import SignedOut from "~/c/SignedOut";
 import { dragoon_glasses } from "~/items";
-import { PetData } from "~/types";
+import { DefaultPet, PetData } from "~/types";
 import { api } from "~/utils/api";
 
 const Home: NextPage = () => {
-  const colorQuery = api.example.petbyOwnerId.useQuery("987337032265240629"); // need to work on loading existing data first
+  const userId = "swag";
+  // const petQuery = api.example.petbyOwnerId.useQuery(userId, {
+  //   placeholderData: DefaultPet,
+  // }); // need to work on loading existing data first
   const utils = api.useContext();
 
   const [color, setColor] = useState("#eeaaee");
   const [glasses_id, setGlassesId] = useState<number>(0);
+
   const pet = api.example.pet.useMutation({
     onMutate: async (value) => {
+      console.log("mutate da state");
       await utils.example.petbyOwnerId.cancel();
-      // @ts-expect-error tRPC queries have no key
-      utils.example.petbyOwnerId.setData(undefined, {
-        color: value,
-      });
+
+      utils.example.petbyOwnerId.setData(userId, value);
+
+      return { value };
     },
-    async onSettled() {
+    async onSettled(data, error, ctx) {
       await utils.example.petbyOwnerId.invalidate();
     },
   });
-
   const data: PetData = {
-    colorHex: color,
-    glassesId: glasses_id,
+    color: color,
+    glasses: glasses_id,
   };
-  dragoon_glasses;
 
   return (
     <>
@@ -55,7 +58,7 @@ const Home: NextPage = () => {
             <select
               name="glasses"
               id="glasses"
-              value={data.glassesId}
+              value={data.glasses}
               onInput={(e) => setGlassesId(parseInt(e.currentTarget.value))}
             >
               {dragoon_glasses.map((item, i) => {
@@ -70,8 +73,9 @@ const Home: NextPage = () => {
               <button
                 className="rounded-md border border-black p-2 hover:bg-slate-100"
                 onClick={() => {
-                  pet.mutate(color);
+                  pet.mutate({ color: data.color, glasses: glasses_id });
                 }}
+                disabled={pet.isLoading}
               >
                 Save
               </button>
