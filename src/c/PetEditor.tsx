@@ -16,8 +16,8 @@ const PetEditor: React.FC<PetEditorProps> = ({ initalData, onSave }) => {
   const [glasses, setGlassesId] = useState<number | undefined>(undefined);
 
   const data: PetData = {
-    color: color || defaultData.color,
-    glasses: glasses || defaultData.glasses,
+    color: color ?? defaultData.color,
+    glasses: glasses ?? defaultData.glasses,
   };
 
   return (
@@ -42,7 +42,7 @@ const PetEditor: React.FC<PetEditorProps> = ({ initalData, onSave }) => {
           {dragoon_glasses.map((item, i) => {
             return (
               <option key={i} value={i.toString()}>
-                {item.src}
+                {item.name}
               </option>
             );
           })}

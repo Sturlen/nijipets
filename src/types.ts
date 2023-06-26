@@ -4,7 +4,7 @@ export type PetData = {
 };
 
 export type PetItem = {
-  //   name: string;
+  name: string;
   src: string;
   // price: number
 };
