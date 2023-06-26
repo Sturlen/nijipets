@@ -1,17 +1,27 @@
+import { dragoon_glasses, empty_dragoon_glasses } from "~/items";
+import { PetData } from "~/types";
+
 type DragoonProps = {
-  color?: string | null;
+  data?: PetData | null;
 };
 
-const Dragoon: React.FC<DragoonProps> = ({ color }) => {
+const Dragoon: React.FC<DragoonProps> = ({ data }) => {
+  const color = data?.colorHex || "#ff00ff";
+  const glasses_id = data?.glassesId || 0;
+
+  const glasses_item = dragoon_glasses[glasses_id] || empty_dragoon_glasses;
   return (
     <div className="relative h-32 w-32">
       <img src="/dragoon_1_outline.png" className="absolute z-10" />
+      {glasses_item.src && (
+        <img src={glasses_item.src} className="absolute z-20" />
+      )}
       <img src="/dragoon_1_color.png" className="absolute grayscale" />
       <svg
         viewBox="0 0 256 256"
         xmlns="http://www.w3.org/2000/svg"
         className="opacity-70"
-        style={{ color: color || "#ff00ff" }}
+        style={{ color: color }}
       >
         <g>
           <title>Layer 1</title>

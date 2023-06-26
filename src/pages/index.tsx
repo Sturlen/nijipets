@@ -4,13 +4,16 @@ import { useState } from "react";
 import Dragoon from "~/c/Dragoon";
 import SignedIn from "~/c/SignedIn";
 import SignedOut from "~/c/SignedOut";
+import { dragoon_glasses } from "~/items";
+import { PetData } from "~/types";
 import { api } from "~/utils/api";
 
 const Home: NextPage = () => {
-  const colorQuery = api.example.petbyOwnerId.useQuery("987337032265240629");
+  const colorQuery = api.example.petbyOwnerId.useQuery("987337032265240629"); // need to work on loading existing data first
   const utils = api.useContext();
 
   const [color, setColor] = useState("#eeaaee");
+  const [glasses_id, setGlassesId] = useState<number>(0);
   const pet = api.example.pet.useMutation({
     onMutate: async (value) => {
       await utils.example.petbyOwnerId.cancel();
@@ -24,6 +27,12 @@ const Home: NextPage = () => {
     },
   });
 
+  const data: PetData = {
+    colorHex: color,
+    glassesId: glasses_id,
+  };
+  dragoon_glasses;
+
   return (
     <>
       <Head>
@@ -33,7 +42,7 @@ const Home: NextPage = () => {
       <main className="flex flex-grow flex-col bg-white p-4">
         <section className="flex flex-col items-center">
           <h2>Pet Editor</h2>
-          <Dragoon color={color} />
+          <Dragoon data={data} />
 
           <div className="flex flex-col">
             <label htmlFor="color">Color</label>
@@ -43,6 +52,20 @@ const Home: NextPage = () => {
               value={color}
               onInput={(e) => setColor(e.currentTarget.value)}
             />
+            <select
+              name="glasses"
+              id="glasses"
+              value={data.glassesId}
+              onInput={(e) => setGlassesId(parseInt(e.currentTarget.value))}
+            >
+              {dragoon_glasses.map((item, i) => {
+                return (
+                  <option key={i} value={i.toString()}>
+                    {item.src}
+                  </option>
+                );
+              })}
+            </select>
             <SignedIn>
               <button
                 className="rounded-md border border-black p-2 hover:bg-slate-100"
