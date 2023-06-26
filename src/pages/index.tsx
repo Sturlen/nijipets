@@ -4,37 +4,29 @@ import Head from "next/head";
 import { useState } from "react";
 import Dragoon from "~/c/Dragoon";
 import PetEditor from "~/c/PetEditor";
-import SignedIn from "~/c/SignedIn";
-import SignedOut from "~/c/SignedOut";
-import { dragoon_glasses } from "~/items";
-import { DefaultPet, PetData } from "~/types";
 import { api } from "~/utils/api";
 
 const Home: NextPage = () => {
   const userId = "swag";
   const { data: SessionData, status } = useSession();
 
-  const petQuery = api.example.petbyOwnerId.useQuery(
-    SessionData?.user.id || "",
-    {
-      enabled: !!SessionData?.user,
-    }
-  ); // need to work on loading existing data first
+  const petQuery = api.pets.petbyOwnerId.useQuery(SessionData?.user.id || "", {
+    enabled: !!SessionData?.user,
+  }); // need to work on loading existing data first
   const utils = api.useContext();
 
   const pet_data = petQuery.data;
 
-  const pet = api.example.pet.useMutation({
+  const pet = api.pets.pet.useMutation({
     onMutate: async (value) => {
-      console.log("mutate da state");
-      await utils.example.petbyOwnerId.cancel();
+      // await utils.pets.petbyOwnerId.cancel();
 
-      utils.example.petbyOwnerId.setData(userId, value);
+      // utils.pets.petbyOwnerId.setData(userId, value);
 
       return { value };
     },
     async onSettled(data, error, ctx) {
-      await utils.example.petbyOwnerId.invalidate();
+      await utils.pets.petbyOwnerId.invalidate();
     },
   });
 

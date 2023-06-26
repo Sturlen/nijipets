@@ -5,7 +5,7 @@ import { api } from "~/utils/api";
 const MyDragoon: React.FC = () => {
   const { data: sessionData } = useSession();
   const userId = sessionData?.user.id;
-  const petQuery = api.example.petbyOwnerId.useQuery(userId || "", {
+  const petQuery = api.pets.petbyOwnerId.useQuery(userId || "", {
     enabled: !!sessionData,
   });
 

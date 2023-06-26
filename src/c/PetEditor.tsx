@@ -36,7 +36,7 @@ const PetEditor: React.FC<PetEditorProps> = ({ initalData, onSave }) => {
         <select
           name="glasses"
           id="glasses"
-          value={data.color}
+          value={data.glasses.toString()}
           onInput={(e) => setGlassesId(parseInt(e.currentTarget.value))}
         >
           {dragoon_glasses.map((item, i) => {
