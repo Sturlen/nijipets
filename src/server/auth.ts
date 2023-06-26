@@ -52,7 +52,7 @@ export const authOptions: NextAuthOptions = {
       console.log(`[USER:LINK] id: ${user.id} name?: ${user.name || ""}`);
     },
     async signIn(message) {
-      const { user, profile } = message;
+      const { user } = message;
       console.log(`[USER:SIGNIN] id: ${user.id} name?: ${user.name || ""} `);
 
       const result = await db
@@ -109,7 +109,7 @@ export const getServerAuthSession = (ctx: {
   return getServerSession(ctx.req, ctx.res, authOptions);
 };
 
-export interface DiscordProfile extends Record<string, any> {
+export interface DiscordProfile extends Record<string, unknown> {
   accent_color: number;
   avatar: string;
   banner: string;

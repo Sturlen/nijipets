@@ -14,7 +14,7 @@ const SignInButton: React.FC = () => {
           </p>
         </>
       )}
-      {img_src && <img className="h-8 w-8 rounded-full" src={img_src} />}
+      {img_src && <img className="h-8 w-8 rounded-full" src={img_src} alt="" />}
       <button
         className="rounded-sm bg-white/10 px-10 py-3 text-4xl font-bold text-black no-underline transition hover:bg-white/20"
         onClick={sessionData ? () => void signOut() : () => void signIn()}

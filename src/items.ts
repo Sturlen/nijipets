@@ -1,6 +1,6 @@
 //items for dressing up your dragoon
 
-import { PetItem } from "./types";
+import type { PetItem } from "./types";
 
 export const empty_dragoon_glasses: Readonly<PetItem> = {
   name: "None",

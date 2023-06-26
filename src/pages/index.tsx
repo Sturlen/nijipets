@@ -1,13 +1,10 @@
 import { type NextPage } from "next";
 import { useSession } from "next-auth/react";
 import Head from "next/head";
-import { useState } from "react";
-import Dragoon from "~/c/Dragoon";
 import PetEditor from "~/c/PetEditor";
 import { api } from "~/utils/api";
 
 const Home: NextPage = () => {
-  const userId = "swag";
   const { data: SessionData, status } = useSession();
 
   const petQuery = api.pets.petbyOwnerId.useQuery(SessionData?.user.id || "", {
@@ -18,14 +15,14 @@ const Home: NextPage = () => {
   const pet_data = petQuery.data;
 
   const pet = api.pets.upsert.useMutation({
-    onMutate: async (value) => {
-      // await utils.pets.petbyOwnerId.cancel();
+    // async onMutate(value) {
+    //   await utils.pets.petbyOwnerId.cancel();
 
-      // utils.pets.petbyOwnerId.setData(userId, value);
+    //   // utils.pets.petbyOwnerId.setData(userId, value);
 
-      return { value };
-    },
-    async onSettled(data, error, ctx) {
+    //   return { value };
+    // },
+    async onSettled() {
       await utils.pets.petbyOwnerId.invalidate();
     },
   });

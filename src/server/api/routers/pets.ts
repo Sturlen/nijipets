@@ -5,10 +5,10 @@ import {
   protectedProcedure,
 } from "~/server/api/trpc";
 
-import { pets, users } from "~/server/schema";
+import { pets } from "~/server/schema";
 import { eq } from "drizzle-orm";
 import { db } from "~/server/db";
-import { DefaultPet, PetData } from "~/types";
+import { DefaultPet, type PetData } from "~/types";
 import { TRPCError } from "@trpc/server";
 
 export const petRouter = createTRPCRouter({

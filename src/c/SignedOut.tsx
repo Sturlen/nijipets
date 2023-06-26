@@ -1,5 +1,5 @@
 import { useSession } from "next-auth/react";
-import { ReactElement } from "react";
+import type { ReactElement } from "react";
 
 type SignedOutProps = {
   children?: ReactElement[] | ReactElement;

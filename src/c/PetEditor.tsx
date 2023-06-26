@@ -1,4 +1,4 @@
-import { DefaultPet, PetData } from "~/types";
+import { DefaultPet, type PetData } from "~/types";
 import Dragoon from "./Dragoon";
 import { useState } from "react";
 import { dragoon_glasses } from "~/items";
