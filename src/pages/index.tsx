@@ -17,7 +17,7 @@ const Home: NextPage = () => {
 
   const pet_data = petQuery.data;
 
-  const pet = api.pets.pet.useMutation({
+  const pet = api.pets.upsert.useMutation({
     onMutate: async (value) => {
       // await utils.pets.petbyOwnerId.cancel();
 

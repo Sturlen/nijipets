@@ -26,7 +26,7 @@ export const petRouter = createTRPCRouter({
     }
   }),
 
-  pet: protectedProcedure
+  upsert: protectedProcedure
     .input(
       z.object({
         color: z.string().startsWith("#").length(7),
