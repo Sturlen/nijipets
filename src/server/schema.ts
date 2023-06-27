@@ -5,7 +5,6 @@ import {
   uniqueIndex,
   varchar,
 } from "drizzle-orm/mysql-core";
-import { DefaultPet } from "~/types";
 
 // declaring enum in database
 export const users = mysqlTable(
@@ -22,8 +21,8 @@ export const users = mysqlTable(
 
 export const pets = mysqlTable("pets", {
   id: serial("id").primaryKey(),
-  name: varchar("name", { length: 256 }),
-  owner: varchar("owner", { length: 256 }),
-  color: varchar("color", { length: 7 }).default(DefaultPet.color),
-  glasses: int("glasses").default(DefaultPet.glasses),
+  name: varchar("name", { length: 256 }).notNull(),
+  owner: varchar("owner", { length: 256 }).notNull(),
+  color: varchar("color", { length: 7 }).notNull(),
+  glasses: int("glasses").notNull(),
 });
