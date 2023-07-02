@@ -53,4 +53,23 @@ export const petRouter = createTRPCRouter({
         console.log("new", input, userId);
       }
     }),
+
+  all: publicProcedure
+    .input(
+      z
+        .object({
+          limit: z.number().int().min(1).max(100).nullish(),
+          cursor: z.number().int().min(0).nullish(),
+        })
+        .transform(({ limit, cursor }) => ({
+          limit: limit ?? 10,
+          cursor: cursor ?? 0,
+        }))
+    )
+    .query(async ({ input: { limit, cursor } }) => {
+      limit; // for pagination
+      cursor;
+      const all_pets: PetData[] = await db.select().from(pets);
+      return all_pets;
+    }),
 });
