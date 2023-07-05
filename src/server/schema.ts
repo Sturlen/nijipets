@@ -11,11 +11,11 @@ export const users = mysqlTable(
   "users",
   {
     id: serial("id").primaryKey(),
-    name: varchar("name", { length: 256 }),
-    discord_id: varchar("discord_id", { length: 256 }),
+    username: varchar("username", { length: 256 }).notNull(),
+    password_hash: varchar("password_hash", { length: 256 }).notNull(),
   },
   (users) => ({
-    nameIndex: uniqueIndex("name_idx").on(users.name),
+    nameIndex: uniqueIndex("name_idx").on(users.username),
   })
 );
 

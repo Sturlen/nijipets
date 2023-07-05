@@ -3,8 +3,10 @@ import {
   getServerSession,
   type NextAuthOptions,
   type DefaultSession,
+  type User,
 } from "next-auth";
 import type { OAuthConfig, OAuthUserConfig } from "next-auth/providers";
+import CredentialsProvider from "next-auth/providers/credentials";
 import { env } from "~/env.mjs";
 import { db } from "~/server/db";
 import { users } from "./schema";
@@ -51,25 +53,9 @@ export const authOptions: NextAuthOptions = {
       const { user } = message;
       console.log(`[USER:LINK] id: ${user.id} name?: ${user.name || ""}`);
     },
-    async signIn(message) {
+    signIn(message) {
       const { user } = message;
       console.log(`[USER:SIGNIN] id: ${user.id} name?: ${user.name || ""} `);
-
-      const result = await db
-        .select()
-        .from(users)
-        .where(eq(users.discord_id, user.id));
-      const existing_user = result[0];
-
-      if (existing_user) {
-        console.log("user already exists");
-      } else {
-        console.log("user does not already exists, creating");
-        await db.insert(users).values({
-          name: user.name,
-          discord_id: user.id,
-        });
-      }
     },
     signOut(message) {
       const { session, token } = message;
@@ -85,15 +71,60 @@ export const authOptions: NextAuthOptions = {
       clientId: env.DISCORD_CLIENT_ID,
       clientSecret: env.DISCORD_CLIENT_SECRET,
     }),
-    /**
-     * ...add more providers here.
-     *
-     * Most other providers require a bit more work than the Discord provider. For example, the
-     * GitHub provider requires you to add the `refresh_token_expires_in` field to the Account
-     * model. Refer to the NextAuth.js docs for the provider you want to use. Example:
-     *
-     * @see https://next-auth.js.org/providers/github
-     */
+    CredentialsProvider({
+      // The name to display on the sign in form (e.g. "Sign in with...")
+      name: "Credentials",
+      // `credentials` is used to generate a form on the sign in page.
+      // You can specify which fields should be submitted, by adding keys to the `credentials` object.
+      // e.g. domain, username, password, 2FA token, etc.
+      // You can pass any HTML attribute to the <input> tag through the object.
+      credentials: {
+        username: { label: "Username", type: "text", placeholder: "jsmith" },
+        password: { label: "Password", type: "password" },
+      },
+      async authorize(credentials, _req) {
+        if (!credentials) {
+          throw new Error("No credentials");
+        }
+        // Add logic here to look up the user from the credentials supplied
+        const result = await db
+          .select()
+          .from(users)
+          .where(eq(users.username, credentials.username));
+        const existing_user = result[0];
+
+        if (existing_user) {
+          console.log("user already exists");
+          return {
+            id: existing_user.id.toString(),
+            name: existing_user.username,
+          } as User;
+        } else {
+          console.log("user does not already exists, creating");
+          await db.insert(users).values({
+            username: credentials.username,
+            password_hash: credentials.password,
+          });
+          console.log("fetch newly created user");
+          const result = await db
+            .select()
+            .from(users)
+            .where(eq(users.username, credentials.username));
+          const user = result[0];
+
+          if (!user) {
+            throw new Error("DB ERROR");
+          }
+
+          console.log("newly created user returned");
+
+          return {
+            id: user.id.toString(),
+            name: user.username,
+          } as User;
+        }
+      },
+    }),
   ],
 };
 
