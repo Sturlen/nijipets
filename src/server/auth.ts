@@ -67,10 +67,6 @@ export const authOptions: NextAuthOptions = {
     },
   },
   providers: [
-    Discord({
-      clientId: env.DISCORD_CLIENT_ID,
-      clientSecret: env.DISCORD_CLIENT_SECRET,
-    }),
     CredentialsProvider({
       // The name to display on the sign in form (e.g. "Sign in with...")
       name: "Credentials",
@@ -102,10 +98,15 @@ export const authOptions: NextAuthOptions = {
 
         if (existing_user) {
           console.log("user already exists");
-          return {
-            id: existing_user.id.toString(),
-            name: existing_user.username,
-          } as User;
+
+          if (existing_user.password_hash === credentials.password) {
+            return {
+              id: existing_user.id.toString(),
+              name: existing_user.username,
+            } as User;
+          } else {
+            return null;
+          }
         } else {
           console.log("user does not already exists, creating");
           await db.insert(users).values({
@@ -146,59 +147,3 @@ export const getServerAuthSession = (ctx: {
 }) => {
   return getServerSession(ctx.req, ctx.res, authOptions);
 };
-
-export interface DiscordProfile extends Record<string, unknown> {
-  accent_color: number;
-  avatar: string;
-  banner: string;
-  banner_color: string;
-  discriminator: string;
-  flags: number;
-  id: string;
-  image_url: string;
-  locale: string;
-  mfa_enabled: boolean;
-  premium_type: number;
-  public_flags: number;
-  username: string;
-  verified: boolean;
-}
-
-/**
- * Customized Discord provider which does not request email
- */
-function Discord<P extends DiscordProfile>(
-  options: OAuthUserConfig<P>
-): OAuthConfig<P> {
-  return {
-    id: "discord",
-    name: "Discord",
-    type: "oauth",
-    authorization: "https://discord.com/api/oauth2/authorize?scope=identify",
-    token: "https://discord.com/api/oauth2/token",
-    userinfo: "https://discord.com/api/users/@me",
-    profile(profile) {
-      if (profile.avatar === null) {
-        const defaultAvatarNumber = parseInt(profile.discriminator) % 5;
-        profile.image_url = `https://cdn.discordapp.com/embed/avatars/${defaultAvatarNumber}.png`;
-      } else {
-        const format = profile.avatar.startsWith("a_") ? "gif" : "png";
-        profile.image_url = `https://cdn.discordapp.com/avatars/${profile.id}/${profile.avatar}.${format}`;
-      }
-      return {
-        id: profile.id,
-        name: profile.username,
-        image: profile.image_url,
-      };
-    },
-    style: {
-      logo: "/discord.svg",
-      logoDark: "/discord-dark.svg",
-      bg: "#fff",
-      text: "#7289DA",
-      bgDark: "#7289DA",
-      textDark: "#fff",
-    },
-    options,
-  };
-}
