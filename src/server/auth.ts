@@ -5,9 +5,7 @@ import {
   type DefaultSession,
   type User,
 } from "next-auth";
-import type { OAuthConfig, OAuthUserConfig } from "next-auth/providers";
 import CredentialsProvider from "next-auth/providers/credentials";
-import { env } from "~/env.mjs";
 import { db } from "~/server/db";
 import { users } from "./schema";
 import { eq } from "drizzle-orm";
