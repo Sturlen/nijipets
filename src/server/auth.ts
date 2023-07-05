@@ -86,6 +86,13 @@ export const authOptions: NextAuthOptions = {
         if (!credentials) {
           throw new Error("No credentials");
         }
+
+        if (
+          credentials.username.length === 0 ||
+          credentials.password.length === 0
+        ) {
+          return null;
+        }
         // Add logic here to look up the user from the credentials supplied
         const result = await db
           .select()
