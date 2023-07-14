@@ -72,4 +72,14 @@ export const petRouter = createTRPCRouter({
       const all_pets: PetData[] = await db.select().from(pets);
       return all_pets;
     }),
+
+  listByOwner: publicProcedure
+    .input(z.object({ ownerUserId: z.string() }))
+    .query(async ({ input: { ownerUserId } }) => {
+      const pets_result: PetData[] = await db
+        .select()
+        .from(pets)
+        .where(eq(pets.owner, ownerUserId));
+      return pets_result;
+    }),
 });

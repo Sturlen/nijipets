@@ -107,6 +107,7 @@ export const authOptions: NextAuthOptions = {
             return {
               id: existing_user.id.toString(),
               name: existing_user.username,
+              email: null,
             } as User;
           } else {
             return null;
@@ -133,6 +134,7 @@ export const authOptions: NextAuthOptions = {
           return {
             id: user.id.toString(),
             name: user.username,
+            email: null,
           } as User;
         }
       },
