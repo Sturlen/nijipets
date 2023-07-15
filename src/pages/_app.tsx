@@ -9,16 +9,12 @@ import Links from "~/c/Links";
 import Link from "next/link";
 import Image from "next/image";
 import SignInButton from "~/c/SignInButton";
-import MyDragoon from "~/c/MyDragoon";
 import Head from "next/head";
-import { redirect } from "next/navigation";
-import { useRouter } from "next/router";
 
 const MyApp: AppType<{ session: Session | null }> = ({
   Component,
   pageProps: { session, ...pageProps },
 }) => {
-  const router = useRouter();
   return (
     <SessionProvider session={session}>
       <ReactQueryDevtools initialIsOpen={false} />
@@ -38,16 +34,7 @@ const MyApp: AppType<{ session: Session | null }> = ({
             />
           </Link>
           <h1 className="hidden">Nijipets</h1>
-          <MyDragoon />
           <div className="mr-auto"></div>
-          <button
-            className="rounded-sm bg-white/10 px-10 py-3 text-4xl font-bold text-black no-underline transition hover:bg-white/20"
-            onClick={() => {
-              void router.push("/pets");
-            }}
-          >
-            Pets
-          </button>
           <SignInButton />
         </div>
         <div className="flex h-full flex-grow content-stretch justify-stretch bg-[#096fc3]">

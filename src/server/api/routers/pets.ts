@@ -7,7 +7,7 @@ import {
 
 import { pets } from "~/server/schema";
 import { eq } from "drizzle-orm";
-import { db } from "~/server/db";
+import { db, petbyOwnerId } from "~/server/db";
 import { DefaultPet, type PetData } from "~/types";
 import { TRPCError } from "@trpc/server";
 
@@ -53,6 +53,26 @@ export const petRouter = createTRPCRouter({
         console.log("new", input, userId);
       }
     }),
+  create: protectedProcedure
+    .input(
+      z.object({
+        color: z.string().startsWith("#").length(7),
+        glasses: z.number().int().min(0),
+      })
+    )
+    .mutation(async ({ input, ctx }) => {
+      const userId = ctx.session.user.id;
+      console.log("Color", input, userId);
+
+      await db.insert(pets).values({
+        name: "goon",
+        color: input.color,
+        glasses: input.glasses,
+        owner: userId,
+      });
+
+      console.log("new", input, userId);
+    }),
 
   all: publicProcedure
     .input(
@@ -76,10 +96,6 @@ export const petRouter = createTRPCRouter({
   listByOwner: publicProcedure
     .input(z.object({ ownerUserId: z.string() }))
     .query(async ({ input: { ownerUserId } }) => {
-      const pets_result: PetData[] = await db
-        .select()
-        .from(pets)
-        .where(eq(pets.owner, ownerUserId));
-      return pets_result;
+      return await petbyOwnerId(ownerUserId);
     }),
 });

@@ -25,6 +25,15 @@ const Links: React.FC = () => {
             Nijisanji Express
           </span>
         </Link>
+        <Link href={"/pets"}>
+          <span
+            className={`font-medium ${
+              router.pathname === "/pets" ? "underline" : ""
+            }`}
+          >
+            Pets
+          </span>
+        </Link>
       </nav>
     </div>
   );
