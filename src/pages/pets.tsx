@@ -1,4 +1,3 @@
-import type { InferGetServerSidePropsType } from "next";
 import Head from "next/head";
 import { getServerAuthSession } from "../server/auth";
 import { type GetServerSideProps } from "next";
@@ -7,7 +6,8 @@ import { useSession } from "next-auth/react";
 import Dragoon from "~/c/Dragoon";
 import Link from "next/link";
 import { petbyOwnerId } from "~/server/db";
-import { PetData } from "~/types";
+import type { PetData } from "~/types";
+import type { Session } from "next-auth";
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const session = await getServerAuthSession(ctx);
@@ -15,7 +15,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
   if (!session) {
     return {
       redirect: {
-        destination: "/",
+        destination: "/api/auth/signin",
         permanent: false,
       },
     };
@@ -28,14 +28,12 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 
   const initialDataUpdatedAt = Date.now();
 
-  console.log("pets1", initialData);
-
   return {
     props: { session, initialData, initialDataUpdatedAt },
   };
 };
 
-type PetsPagePrips = {
+type PetsPageProps = {
   initialData: PetData[];
   initialDataUpdatedAt: number;
 };
@@ -44,14 +42,14 @@ type PetsPagePrips = {
 export default function Page({
   initialData,
   initialDataUpdatedAt,
-}: PetsPagePrips) {
+}: PetsPageProps) {
   const { data: session } = useSession();
 
   if (!session) {
     throw new Error("Unauthorized");
   }
 
-  const { data: pets, isInitialLoading } = api.pets.listByOwner.useQuery(
+  const { data: pets } = api.pets.listByOwner.useQuery(
     {
       ownerUserId: session.user.id,
     },
@@ -68,15 +66,13 @@ export default function Page({
       </Head>
       <main className="flex flex-grow flex-col items-center bg-white p-4">
         <p className="mb-1">This is where you keep your goons</p>
-        {isInitialLoading && <p>:DragoonPause:</p>}
-        {pets && pets.length && (
+        {pets.length > 0 ? (
           <ul className="ml-4 mr-4 flex flex-row flex-wrap">
             {pets.map((petData, i) => (
               <Dragoon data={petData} key={i} />
             ))}
           </ul>
-        )}
-        {pets && !pets.length && (
+        ) : (
           <div>
             <p>
               You pet collection is looking mighty empty, maybe time to adopt

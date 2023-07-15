@@ -62,7 +62,6 @@ export const petRouter = createTRPCRouter({
     )
     .mutation(async ({ input, ctx }) => {
       const userId = ctx.session.user.id;
-      console.log("Color", input, userId);
 
       await db.insert(pets).values({
         name: "goon",
@@ -71,7 +70,7 @@ export const petRouter = createTRPCRouter({
         owner: userId,
       });
 
-      console.log("new", input, userId);
+      console.log("New Pet Created", input, userId);
     }),
 
   all: publicProcedure
@@ -89,7 +88,11 @@ export const petRouter = createTRPCRouter({
     .query(async ({ input: { limit, cursor } }) => {
       limit; // for pagination
       cursor;
-      const all_pets: PetData[] = await db.select().from(pets);
+      const all_pets: PetData[] = await db
+        .select()
+        .from(pets)
+        .limit(limit)
+        .offset(cursor);
       return all_pets;
     }),
 
