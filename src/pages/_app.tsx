@@ -10,6 +10,7 @@ import Link from "next/link";
 import Image from "next/image";
 import SignInButton from "~/c/SignInButton";
 import Head from "next/head";
+import { $path } from "next-typesafe-url";
 
 const MyApp: AppType<{ session: Session | null }> = ({
   Component,
@@ -24,7 +25,7 @@ const MyApp: AppType<{ session: Session | null }> = ({
       </Head>
       <main className="flex min-h-screen flex-col items-stretch justify-stretch bg-gradient-to-b from-[#2e026d] to-[#15162c]">
         <div className="align-center flex items-center gap-4 bg-[#096fc3]">
-          <Link href="/">
+          <Link href={$path({ route: "/" })}>
             <Image
               src="/logo.png"
               width={381}

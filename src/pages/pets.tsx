@@ -7,7 +7,9 @@ import Dragoon from "~/c/Dragoon";
 import Link from "next/link";
 import { petbyOwnerId } from "~/server/db";
 import type { PetData } from "~/types";
-import type { Session } from "next-auth";
+import { $path } from "next-typesafe-url";
+
+const CREATEAGOON_HREF = $path({ route: "/createagoon" });
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const session = await getServerAuthSession(ctx);
@@ -81,7 +83,7 @@ export default function Page({
           </div>
         )}
         <Link
-          href={"/createagoon"}
+          href={CREATEAGOON_HREF}
           className="box-border rounded-md border border-black p-2 hover:bg-slate-100"
         >
           Adopt a new pet
