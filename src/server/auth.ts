@@ -6,7 +6,7 @@ import {
   type User,
 } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
-import { db } from "~/server/db";
+import { CredentialsSchema, createNewUser, db } from "~/server/db";
 import { users } from "./schema";
 import { eq } from "drizzle-orm";
 
@@ -82,18 +82,9 @@ export const authOptions: NextAuthOptions = {
         },
         password: { label: "Password", type: "password", required: "required" },
       },
-      async authorize(credentials, _req) {
-        if (!credentials) {
-          throw new Error("No credentials");
-        }
+      async authorize(raw_credentials, _req) {
+        const credentials = CredentialsSchema.parse(raw_credentials);
 
-        if (
-          credentials.username.length === 0 ||
-          credentials.password.length === 0
-        ) {
-          return null;
-        }
-        // Add logic here to look up the user from the credentials supplied
         const result = await db
           .select()
           .from(users)
@@ -110,30 +101,17 @@ export const authOptions: NextAuthOptions = {
               email: null,
             } as User;
           } else {
+            console.log("wrong password");
             return null;
           }
         } else {
-          console.log("user does not already exists, creating");
-          await db.insert(users).values({
-            username: credentials.username,
-            password_hash: credentials.password,
-          });
-          console.log("fetch newly created user");
-          const result = await db
-            .select()
-            .from(users)
-            .where(eq(users.username, credentials.username));
-          const user = result[0];
-
-          if (!user) {
-            throw new Error("DB ERROR");
-          }
+          const user = await createNewUser(credentials);
 
           console.log("newly created user returned");
 
           return {
             id: user.id.toString(),
-            name: user.username,
+            name: user.name,
             email: null,
           } as User;
         }
