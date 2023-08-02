@@ -8,17 +8,19 @@ import {
 import { pets } from "~/server/schema";
 import { eq } from "drizzle-orm";
 import { db, petbyOwnerId } from "~/server/db";
-import { DefaultPet, type PetApperance } from "~/types";
+import { DefaultPetAppearance, type PetApperance } from "~/types";
 import { TRPCError } from "@trpc/server";
 
 export const petRouter = createTRPCRouter({
   petbyOwnerId: publicProcedure.input(z.string()).query(async ({ input }) => {
-    const result = await db.select().from(pets).where(eq(pets.owner, input));
-    const firstPet = result[0];
+    const [firstPet] = await db
+      .select()
+      .from(pets)
+      .where(eq(pets.owner, input));
     if (firstPet) {
       const pet_data: PetApperance = {
-        color: firstPet.color || DefaultPet.color,
-        glasses: firstPet.glasses || DefaultPet.glasses,
+        color: firstPet.color || DefaultPetAppearance.color,
+        glasses: firstPet.glasses || DefaultPetAppearance.glasses,
       };
       return pet_data;
     } else {
