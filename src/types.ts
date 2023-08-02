@@ -1,4 +1,4 @@
-export type PetData = {
+export type PetApperance = {
   color: string;
   glasses: number;
 };
@@ -9,7 +9,7 @@ export type PetItem = {
   // price: number
 };
 
-export const DefaultPet: Readonly<PetData> = {
+export const DefaultPet: Readonly<PetApperance> = {
   color: "#eeaaee",
   glasses: 0,
 };

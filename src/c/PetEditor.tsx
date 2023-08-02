@@ -1,4 +1,4 @@
-import { DefaultPet, type PetData } from "~/types";
+import { DefaultPet, type PetApperance } from "~/types";
 import Dragoon from "./Dragoon";
 import { useState } from "react";
 import { dragoon_glasses } from "~/items";
@@ -6,8 +6,8 @@ import SignedIn from "./SignedIn";
 import SignedOut from "./SignedOut";
 
 export type PetEditorProps = {
-  initalData?: PetData;
-  onSave?: (newData: PetData) => void;
+  initalData?: PetApperance;
+  onSave?: (newData: PetApperance) => void;
 };
 
 const PetEditor: React.FC<PetEditorProps> = ({ initalData, onSave }) => {
@@ -15,7 +15,7 @@ const PetEditor: React.FC<PetEditorProps> = ({ initalData, onSave }) => {
   const [color, setColor] = useState<string | undefined>(undefined);
   const [glasses, setGlassesId] = useState<number | undefined>(undefined);
 
-  const data: PetData = {
+  const data: PetApperance = {
     color: color ?? defaultData.color,
     glasses: glasses ?? defaultData.glasses,
   };

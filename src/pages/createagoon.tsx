@@ -4,7 +4,7 @@ import Head from "next/head";
 import { useRouter } from "next/router";
 import PetEditor from "~/c/PetEditor";
 import { getServerAuthSession } from "~/server/auth";
-import { type PetData } from "~/types";
+import { type PetApperance } from "~/types";
 import { api } from "~/utils/api";
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
@@ -43,7 +43,7 @@ const Home: NextPage = () => {
     },
   });
 
-  const save = (data: PetData) => {
+  const save = (data: PetApperance) => {
     pet.mutate(data);
     void router.push("/pets");
   };

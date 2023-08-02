@@ -1,8 +1,8 @@
 import { dragoon_glasses, empty_dragoon_glasses } from "~/items";
-import type { PetData } from "~/types";
+import type { PetApperance } from "~/types";
 
 type DragoonProps = {
-  data: Readonly<PetData>;
+  data: Readonly<PetApperance>;
 };
 
 const Dragoon: React.FC<DragoonProps> = ({ data }) => {

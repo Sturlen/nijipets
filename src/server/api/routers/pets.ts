@@ -8,7 +8,7 @@ import {
 import { pets } from "~/server/schema";
 import { eq } from "drizzle-orm";
 import { db, petbyOwnerId } from "~/server/db";
-import { DefaultPet, type PetData } from "~/types";
+import { DefaultPet, type PetApperance } from "~/types";
 import { TRPCError } from "@trpc/server";
 
 export const petRouter = createTRPCRouter({
@@ -16,7 +16,7 @@ export const petRouter = createTRPCRouter({
     const result = await db.select().from(pets).where(eq(pets.owner, input));
     const firstPet = result[0];
     if (firstPet) {
-      const pet_data: PetData = {
+      const pet_data: PetApperance = {
         color: firstPet.color || DefaultPet.color,
         glasses: firstPet.glasses || DefaultPet.glasses,
       };
@@ -88,7 +88,7 @@ export const petRouter = createTRPCRouter({
     .query(async ({ input: { limit, cursor } }) => {
       limit; // for pagination
       cursor;
-      const all_pets: PetData[] = await db
+      const all_pets: PetApperance[] = await db
         .select()
         .from(pets)
         .limit(limit)

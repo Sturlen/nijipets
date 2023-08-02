@@ -1,7 +1,7 @@
 import { connect } from "@planetscale/database";
 import { drizzle } from "drizzle-orm/planetscale-serverless";
 import { env } from "process";
-import type { PetData } from "~/types";
+import type { PetApperance } from "~/types";
 import { pets, users } from "./schema";
 import { eq, getTableColumns } from "drizzle-orm";
 import { z } from "zod";
@@ -16,7 +16,7 @@ export const db = drizzle(connection);
 
 export async function petbyOwnerId(userId: string) {
   const { color, glasses } = getTableColumns(pets);
-  const pets_result: PetData[] = await db
+  const pets_result: PetApperance[] = await db
     .select({ color, glasses })
     .from(pets)
     .where(eq(pets.owner, userId));
