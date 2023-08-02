@@ -5,7 +5,6 @@ import { api } from "~/utils/api";
 import { useSession } from "next-auth/react";
 import Dragoon from "~/c/Dragoon";
 import Link from "next/link";
-import type { PetData } from "~/types";
 import { $path } from "next-typesafe-url";
 
 const CREATEAGOON_HREF = $path({ route: "/createagoon" });

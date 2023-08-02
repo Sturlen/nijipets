@@ -3,7 +3,7 @@ import { drizzle } from "drizzle-orm/planetscale-serverless";
 import { env } from "process";
 import type { PetData } from "~/types";
 import { pets, users } from "./schema";
-import { eq } from "drizzle-orm";
+import { eq, getTableColumns } from "drizzle-orm";
 import { z } from "zod";
 import type { User } from "next-auth";
 
@@ -15,8 +15,9 @@ const connection = connect({
 export const db = drizzle(connection);
 
 export async function petbyOwnerId(userId: string) {
+  const { color, glasses } = getTableColumns(pets);
   const pets_result: PetData[] = await db
-    .select()
+    .select({ color, glasses })
     .from(pets)
     .where(eq(pets.owner, userId));
   return pets_result;
@@ -34,16 +35,17 @@ export type Credentials = z.infer<typeof CredentialsSchema>;
 export async function createNewUser(credentials: Credentials) {
   try {
     console.log("Creating new User with username:", credentials.username);
+
     await db.insert(users).values({
       username: credentials.username,
       password_hash: credentials.password,
     });
     console.log("fetch newly created user", credentials.username);
-    const result = await db
-      .select()
+    const { id, username } = getTableColumns(users);
+    const [user] = await db
+      .select({ id, username })
       .from(users)
       .where(eq(users.username, credentials.username));
-    const user = result[0];
 
     if (!user) {
       throw new Error("Could not fetch newly created user");
