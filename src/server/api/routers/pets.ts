@@ -28,6 +28,21 @@ export const petRouter = createTRPCRouter({
     }
   }),
 
+  findById: publicProcedure
+    .input(z.number({ coerce: true }).int().min(0))
+    .query(async ({ input: petId }) => {
+      const [firstPet] = await db.select().from(pets).where(eq(pets.id, petId));
+      if (firstPet) {
+        const pet_data: PetApperance = {
+          color: firstPet.color || DefaultPetAppearance.color,
+          glasses: firstPet.glasses || DefaultPetAppearance.glasses,
+        };
+        return pet_data;
+      } else {
+        throw new TRPCError({ code: "NOT_FOUND" });
+      }
+    }),
+
   upsert: protectedProcedure
     .input(
       z.object({

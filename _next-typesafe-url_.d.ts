@@ -19,6 +19,7 @@ declare module "@@@next-typesafe-url" {
     "/nijiexpress": StaticRoute;
     "/petcreator": StaticRoute;
     "/pets": StaticRoute;
+    "/pets/[petId]": StaticRoute;
     "/playground": StaticRoute;
   }
 }
