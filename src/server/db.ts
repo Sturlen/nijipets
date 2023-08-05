@@ -14,7 +14,7 @@ const connection = connect({
 
 export const db = drizzle(connection);
 
-export async function petbyOwnerId(userId: string) {
+export async function petsByOwnerId(userId: string) {
   const { color, glasses } = getTableColumns(pets);
   const pets_result: PetApperance[] = await db
     .select({ color, glasses })

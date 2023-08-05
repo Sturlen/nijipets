@@ -5,6 +5,7 @@ import { $path } from "next-typesafe-url";
 const PETCREATOR_HREF = $path({ route: "/petcreator" });
 const NIJIEXPRESS_HREF = $path({ route: "/nijiexpress" });
 const PETS_HREF = $path({ route: "/pets" });
+const PLAYGROUND_HREF = $path({ route: "/playground" });
 
 const Links: React.FC = () => {
   const router = useRouter();
@@ -36,7 +37,16 @@ const Links: React.FC = () => {
               router.pathname === PETS_HREF ? "underline" : ""
             }`}
           >
-            Pets
+            My Pets
+          </span>
+        </Link>
+        <Link href={PLAYGROUND_HREF}>
+          <span
+            className={`font-medium ${
+              router.pathname === PLAYGROUND_HREF ? "underline" : ""
+            }`}
+          >
+            The Playground
           </span>
         </Link>
       </nav>

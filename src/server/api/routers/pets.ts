@@ -7,8 +7,13 @@ import {
 
 import { pets } from "~/server/schema";
 import { eq } from "drizzle-orm";
-import { db, petbyOwnerId } from "~/server/db";
-import { DefaultPetAppearance, type PetApperance } from "~/types";
+import { db, petsByOwnerId } from "~/server/db";
+import {
+  DefaultPetAppearance,
+  PetSchema,
+  type PetApperance,
+  Pet,
+} from "~/types";
 import { TRPCError } from "@trpc/server";
 
 export const petRouter = createTRPCRouter({
@@ -103,19 +108,21 @@ export const petRouter = createTRPCRouter({
         }))
     )
     .query(async ({ input: { limit, cursor } }) => {
-      limit; // for pagination
-      cursor;
-      const all_pets: PetApperance[] = await db
-        .select()
-        .from(pets)
-        .limit(limit)
-        .offset(cursor);
-      return all_pets;
+      const raw_pets = await db.select().from(pets).limit(limit).offset(cursor);
+
+      const parsed_pets = raw_pets.map(({ id, glasses, color, ...rest }) =>
+        PetSchema.parse({
+          id: id.toString(),
+          apperance: { glasses, color },
+          ...rest,
+        })
+      );
+      return parsed_pets;
     }),
 
   listByOwner: publicProcedure
     .input(z.object({ ownerUserId: z.string() }))
     .query(async ({ input: { ownerUserId } }) => {
-      return await petbyOwnerId(ownerUserId);
+      return await petsByOwnerId(ownerUserId);
     }),
 });

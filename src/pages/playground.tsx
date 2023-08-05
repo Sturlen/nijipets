@@ -1,5 +1,6 @@
 import { type NextPage } from "next";
 import Head from "next/head";
+import Link from "next/link";
 import Dragoon from "~/c/Dragoon";
 import { api } from "~/utils/api";
 
@@ -18,7 +19,11 @@ const CreatePet: NextPage = () => {
             <ul className="flex flex-row items-center justify-center">
               {pets.map((pet, i) => (
                 <li key={i}>
-                  <Dragoon data={pet} />
+                  <Link href={`/pets/${pet.id}`}>
+                    <Dragoon data={pet.apperance} />
+                    <p>{pet.name}</p>
+                    <p>Owner: {pet.owner}</p>
+                  </Link>
                 </li>
               ))}
             </ul>
