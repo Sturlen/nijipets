@@ -7,10 +7,10 @@ export const PetApperanceSchema = z.object({
 
 export type PetApperance = z.infer<typeof PetApperanceSchema>;
 
-export const PetIdSchema = z.number({ coerce: true }).int().min(0);
+export const PetIdSchema = z.number({ coerce: true }).int().min(0).brand("pet");
 
 export const PetSchema = z.object({
-  id: z.string().nonempty(),
+  id: PetIdSchema,
   name: z.string().nonempty(),
   owner: z.string().nonempty(),
   apperance: PetApperanceSchema,

@@ -35,7 +35,7 @@ export const petRouter = createTRPCRouter({
   }),
 
   findById: publicProcedure
-    .input(z.number({ coerce: true }).int().min(0))
+    .input(PetIdSchema)
     .query(async ({ input: petId }) => {
       const cols = getTableColumns(pets);
       const { username } = getTableColumns(users);

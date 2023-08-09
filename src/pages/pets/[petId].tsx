@@ -36,7 +36,9 @@ export default function Page({}) {
       {isLoading && <p>Looking...</p>}
       {ready && (
         <div className="flex flex-col items-center">
-          <p className="text-2xl italic"> {`#${data.id.padStart(3, "0")}`}</p>
+          <p className="text-2xl italic">
+            {`#${data.id.toFixed(0).padStart(3, "0")}`}
+          </p>
           <Dragoon data={data.apperance} />
           {is_yours && <p>There may be many like it, but this one is yours!</p>}
           {is_yours && (
