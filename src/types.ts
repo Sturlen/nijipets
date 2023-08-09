@@ -7,6 +7,8 @@ export const PetApperanceSchema = z.object({
 
 export type PetApperance = z.infer<typeof PetApperanceSchema>;
 
+export const PetIdSchema = z.number({ coerce: true }).int().min(0);
+
 export const PetSchema = z.object({
   id: z.string().nonempty(),
   name: z.string().nonempty(),

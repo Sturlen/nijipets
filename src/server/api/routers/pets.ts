@@ -5,14 +5,15 @@ import {
   protectedProcedure,
 } from "~/server/api/trpc";
 
-import { pets } from "~/server/schema";
-import { eq } from "drizzle-orm";
+import { pets, users } from "~/server/schema";
+import { and, eq, getTableColumns } from "drizzle-orm";
 import { db, petsByOwnerId } from "~/server/db";
 import {
   DefaultPetAppearance,
   PetSchema,
   type PetApperance,
   Pet,
+  PetIdSchema,
 } from "~/types";
 import { TRPCError } from "@trpc/server";
 
@@ -36,13 +37,23 @@ export const petRouter = createTRPCRouter({
   findById: publicProcedure
     .input(z.number({ coerce: true }).int().min(0))
     .query(async ({ input: petId }) => {
-      const [firstPet] = await db.select().from(pets).where(eq(pets.id, petId));
+      const cols = getTableColumns(pets);
+      const { username } = getTableColumns(users);
+      const [firstPet] = await db
+        .select({ ...cols, owner_username: username })
+        .from(pets)
+        .limit(1)
+        .innerJoin(users, eq(users.id, pets.owner))
+        .where(eq(pets.id, petId));
       if (firstPet) {
-        const pet_data: PetApperance = {
-          color: firstPet.color || DefaultPetAppearance.color,
-          glasses: firstPet.glasses || DefaultPetAppearance.glasses,
-        };
-        return pet_data;
+        const { id, color, glasses, ...rest } = firstPet;
+        console.log("findbyid owner", rest);
+        const pet = PetSchema.parse({
+          id: id.toString(),
+          apperance: { glasses, color },
+          ...rest,
+        });
+        return pet;
       } else {
         throw new TRPCError({ code: "NOT_FOUND" });
       }
@@ -51,29 +62,21 @@ export const petRouter = createTRPCRouter({
   upsert: protectedProcedure
     .input(
       z.object({
+        id: PetIdSchema,
         color: z.string().startsWith("#").length(7),
         glasses: z.number().int().min(0),
       })
     )
     .mutation(async ({ input, ctx }) => {
+      const { id, color, glasses } = input;
       const userId = ctx.session.user.id;
       console.log("Color", input, userId);
 
-      const result = await db.select().from(pets).where(eq(pets.owner, userId));
-      const existing_pet = result[0];
-
-      if (existing_pet) {
-        await db.update(pets).set(input).where(eq(pets.owner, userId));
-        console.log("existing", input, userId);
-      } else {
-        await db.insert(pets).values({
-          name: "goon",
-          color: input.color,
-          glasses: input.glasses,
-          owner: userId,
-        });
-        console.log("new", input, userId);
-      }
+      await db
+        .update(pets)
+        .set({ color, glasses })
+        .where(and(eq(pets.owner, userId), eq(pets.id, id)));
+      console.log("Updated existing", input, userId);
     }),
   create: protectedProcedure
     .input(
@@ -97,15 +100,10 @@ export const petRouter = createTRPCRouter({
 
   all: publicProcedure
     .input(
-      z
-        .object({
-          limit: z.number().int().min(1).max(100).nullish(),
-          cursor: z.number().int().min(0).nullish(),
-        })
-        .transform(({ limit, cursor }) => ({
-          limit: limit ?? 10,
-          cursor: cursor ?? 0,
-        }))
+      z.object({
+        limit: z.number().int().min(1).max(100).default(10),
+        cursor: z.number().int().min(0).default(0),
+      })
     )
     .query(async ({ input: { limit, cursor } }) => {
       const raw_pets = await db.select().from(pets).limit(limit).offset(cursor);
