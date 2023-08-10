@@ -10,6 +10,7 @@
     "generate": "drizzle-kit push:mysql --config=./drizzle.config.ts"
   },
   "dependencies": {
+    "@paralleldrive/cuid2": "^2.2.2",
     "@planetscale/database": "^1.7.0",
     "@t3-oss/env-nextjs": "^0.4.1",
     "@tanstack/react-query": "^4.32.6",
