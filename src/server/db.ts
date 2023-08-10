@@ -1,10 +1,10 @@
 import { connect } from "@planetscale/database";
 import { drizzle } from "drizzle-orm/planetscale-serverless";
 import { env } from "process";
-import type { PetApperance } from "~/types";
-import { pets, users } from "./schema";
+
+import { users } from "./schema";
 import * as schema from "./schema";
-import { eq, getTableColumns } from "drizzle-orm";
+
 import { z } from "zod";
 import type { User } from "next-auth";
 import { createId } from "@paralleldrive/cuid2";
@@ -15,15 +15,7 @@ const connection = connect({
 });
 
 export const db = drizzle(connection, { schema });
-
-export async function petsByOwnerId(userId: schema.UserId) {
-  const { color, glasses } = getTableColumns(pets);
-  const pets_result: PetApperance[] = await db
-    .select({ color, glasses })
-    .from(pets)
-    .where(eq(pets.ownerId, userId));
-  return pets_result;
-}
+export type DB_TYPE = typeof db;
 
 export const CredentialsSchema = z
   .object({

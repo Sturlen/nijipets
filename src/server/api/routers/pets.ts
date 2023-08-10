@@ -12,7 +12,7 @@ import {
   PetIdSchema,
 } from "~/server/schema";
 import { and, eq } from "drizzle-orm";
-import { db, petsByOwnerId } from "~/server/db";
+import { db } from "~/server/db";
 import { DefaultPetAppearance, type PetApperance } from "~/types";
 import { TRPCError } from "@trpc/server";
 import { createId } from "@paralleldrive/cuid2";
@@ -110,6 +110,10 @@ export const petRouter = createTRPCRouter({
   listByOwner: publicProcedure
     .input(z.object({ ownerUserId: UserIdSchema }))
     .query(async ({ input: { ownerUserId } }) => {
-      return await petsByOwnerId(ownerUserId);
+      return await db.query.users.findFirst({
+        columns: {},
+        where: (users, { eq }) => eq(users.id, ownerUserId),
+        with: { pets: true },
+      });
     }),
 });

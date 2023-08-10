@@ -37,13 +37,12 @@ export default function Page() {
     throw new Error("Unauthorized");
   }
 
-  const {
-    data: pets,
-    isLoading,
-    isError,
-  } = api.pets.listByOwner.useQuery({
+  const { data, isLoading, isError } = api.pets.listByOwner.useQuery({
     ownerUserId: session.user.id,
   });
+
+  const pets = data?.pets;
+
   return (
     <>
       <Head>
