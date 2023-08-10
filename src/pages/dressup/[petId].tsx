@@ -39,7 +39,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     throw new Error("Not Found");
   }
 
-  if (pet.owner !== session.user.id) {
+  if (pet.ownerId !== session.user.id) {
     throw new Error("Unauthorized");
   }
 

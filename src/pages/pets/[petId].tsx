@@ -29,7 +29,7 @@ export default function Page({}) {
 
   const ready = !!data && status !== "loading";
 
-  const is_yours = ready && session?.user.id === data.owner;
+  const is_yours = ready && session?.user.id === data.ownerId;
 
   return (
     <div className="flex flex-grow flex-col items-center bg-white p-4">

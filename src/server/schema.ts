@@ -1,3 +1,4 @@
+import { relations } from "drizzle-orm";
 import {
   int,
   mysqlTable,
@@ -19,10 +20,21 @@ export const users = mysqlTable(
   })
 );
 
+export const usersRelations = relations(users, ({ many }) => ({
+  pets: many(pets),
+}));
+
 export const pets = mysqlTable("pets", {
   id: serial("id").primaryKey(),
   name: varchar("name", { length: 256 }).notNull(),
-  owner: varchar("owner", { length: 256 }).notNull(),
+  ownerId: int("owner_id").notNull(),
   color: varchar("color", { length: 7 }).notNull(),
   glasses: int("glasses").notNull(),
 });
+
+export const petsRelations = relations(pets, ({ one }) => ({
+  owner: one(users, {
+    fields: [pets.ownerId],
+    references: [users.id],
+  }),
+}));

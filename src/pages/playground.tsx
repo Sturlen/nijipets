@@ -2,12 +2,16 @@ import { type NextPage } from "next";
 import { useSession } from "next-auth/react";
 import Head from "next/head";
 import Link from "next/link";
+import { z } from "zod";
 import Dragoon from "~/c/Dragoon";
 import { api } from "~/utils/api";
 
 const CreatePet: NextPage = () => {
   const { data: session, status } = useSession();
   const { data: pets } = api.pets.all.useQuery({});
+
+  const userIdState = z.number({ coerce: true }).safeParse(session?.user.id);
+  const user_id = userIdState.success ? userIdState.data : undefined;
 
   return (
     <>
@@ -19,12 +23,12 @@ const CreatePet: NextPage = () => {
         <div className="flex items-center justify-center">
           <ul className="ml-4 mr-4 flex flex-row flex-wrap">
             {pets && status !== "loading"
-              ? pets.map(({ id, apperance, owner, name }) => (
+              ? pets.map(({ id, apperance, ownerId: owner, name }) => (
                   <li key={id} className="m-1">
                     <Link href={`/pets/${id}`}>
                       <Dragoon data={apperance} />
                       <p>{name}</p>
-                      {session?.user.id == owner ? (
+                      {user_id && user_id == owner ? (
                         <p>Your pet</p>
                       ) : (
                         <p>Owner: {owner}</p>

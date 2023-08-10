@@ -12,7 +12,7 @@ export const PetIdSchema = z.number({ coerce: true }).int().min(0).brand("pet");
 export const PetSchema = z.object({
   id: PetIdSchema,
   name: z.string().nonempty(),
-  owner: z.string().nonempty(),
+  ownerId: z.number({ coerce: true }).int(),
   apperance: PetApperanceSchema,
 });
 

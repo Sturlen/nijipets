@@ -3,6 +3,7 @@ import { drizzle } from "drizzle-orm/planetscale-serverless";
 import { env } from "process";
 import type { PetApperance } from "~/types";
 import { pets, users } from "./schema";
+import * as schema from "./schema";
 import { eq, getTableColumns } from "drizzle-orm";
 import { z } from "zod";
 import type { User } from "next-auth";
@@ -12,14 +13,14 @@ const connection = connect({
   url: env.DATABASE_URL,
 });
 
-export const db = drizzle(connection);
+export const db = drizzle(connection, { schema });
 
-export async function petsByOwnerId(userId: string) {
+export async function petsByOwnerId(userId: number) {
   const { color, glasses } = getTableColumns(pets);
   const pets_result: PetApperance[] = await db
     .select({ color, glasses })
     .from(pets)
-    .where(eq(pets.owner, userId));
+    .where(eq(pets.ownerId, userId));
   return pets_result;
 }
 
