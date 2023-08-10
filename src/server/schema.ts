@@ -38,9 +38,9 @@ export const insertUserSchema = createInsertSchema(users, {
 export type InsertUser = z.infer<typeof insertUserSchema>;
 
 export const pets = mysqlTable("pets", {
-  id: serial("id").primaryKey(),
+  id: varchar("id", { length: 24 }).primaryKey(), //cuid2
   name: varchar("name", { length: 256 }).notNull(),
-  ownerId: varchar("owner_id", { length: 24 }), // cuid2
+  ownerId: varchar("owner_id", { length: 24 }).notNull(), // cuid2
   color: varchar("color", { length: 7 }).notNull(),
   glasses: int("glasses").notNull(),
 });
@@ -54,3 +54,17 @@ export const petsRelations = relations(pets, ({ one }) => ({
 
 export const PetIdSchema = z.string().cuid2().brand("PetId");
 export type PetId = z.infer<typeof PetIdSchema>;
+
+export const insertPetSchema = createInsertSchema(pets, {
+  id: PetIdSchema,
+  ownerId: UserIdSchema,
+  color: z.string().startsWith("#").length(7), // TODO: make a RGB color type
+  glasses: z.number().int().min(0),
+});
+
+export const PetApperanceSchema = insertPetSchema.pick({
+  color: true,
+  glasses: true,
+});
+
+export type PetApperance = z.infer<typeof PetApperanceSchema>;

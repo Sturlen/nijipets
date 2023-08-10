@@ -5,16 +5,17 @@ import {
   protectedProcedure,
 } from "~/server/api/trpc";
 
-import { UserIdSchema, pets } from "~/server/schema";
+import {
+  UserIdSchema,
+  insertPetSchema,
+  pets,
+  PetIdSchema,
+} from "~/server/schema";
 import { and, eq } from "drizzle-orm";
 import { db, petsByOwnerId } from "~/server/db";
-import {
-  DefaultPetAppearance,
-  PetSchema,
-  type PetApperance,
-  PetIdSchema,
-} from "~/types";
+import { DefaultPetAppearance, type PetApperance } from "~/types";
 import { TRPCError } from "@trpc/server";
+import { createId } from "@paralleldrive/cuid2";
 
 export const petRouter = createTRPCRouter({
   petbyOwnerId: publicProcedure.input(UserIdSchema).query(async ({ input }) => {
@@ -41,27 +42,19 @@ export const petRouter = createTRPCRouter({
         with: { owner: { columns: { id: true, username: true } } },
       });
       if (firstPet) {
-        const { id, color, glasses, ...rest } = firstPet;
-        console.log("findbyid owner", rest);
-        const pet = PetSchema.parse({
-          id: id.toString(),
-          apperance: { glasses, color },
+        const { glasses, color, ...rest } = firstPet;
+        console.log("findbyid owner", rest.owner);
+        return {
+          apperance: { color, glasses },
           ...rest,
-        });
-        return pet;
+        };
       } else {
         throw new TRPCError({ code: "NOT_FOUND" });
       }
     }),
 
   upsert: protectedProcedure
-    .input(
-      z.object({
-        id: PetIdSchema,
-        color: z.string().startsWith("#").length(7),
-        glasses: z.number().int().min(0),
-      })
-    )
+    .input(insertPetSchema.pick({ id: true, color: true, glasses: true }))
     .mutation(async ({ input, ctx }) => {
       const { id, color, glasses } = input;
       const userId = ctx.session.user.id;
@@ -74,21 +67,20 @@ export const petRouter = createTRPCRouter({
       console.log("Updated existing", input, userId);
     }),
   create: protectedProcedure
-    .input(
-      z.object({
-        color: z.string().startsWith("#").length(7),
-        glasses: z.number().int().min(0),
-      })
-    )
+    .input(insertPetSchema.pick({ color: true, glasses: true }))
     .mutation(async ({ input, ctx }) => {
       const userId = ctx.session.user.id;
 
-      await db.insert(pets).values({
+      const id = createId();
+      const pet = insertPetSchema.parse({
+        id: id,
         name: "goon",
         color: input.color,
         glasses: input.glasses,
         ownerId: userId,
       });
+
+      await db.insert(pets).values(pet);
 
       console.log("New Pet Created", input, userId);
     }),
@@ -101,15 +93,17 @@ export const petRouter = createTRPCRouter({
       })
     )
     .query(async ({ input: { limit, cursor } }) => {
-      const raw_pets = await db.select().from(pets).limit(limit).offset(cursor);
+      const raw_pets = await db.query.pets.findMany({
+        limit,
+        offset: cursor,
+        with: { owner: { columns: { id: true, username: true } } },
+      });
 
-      const parsed_pets = raw_pets.map(({ id, glasses, color, ...rest }) =>
-        PetSchema.parse({
-          id: id.toString(),
-          apperance: { glasses, color },
-          ...rest,
-        })
-      );
+      const parsed_pets = raw_pets.map(({ color, glasses, ...rest }) => ({
+        apperance: { color, glasses },
+        ...rest,
+      }));
+
       return parsed_pets;
     }),
 

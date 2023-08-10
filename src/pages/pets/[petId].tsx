@@ -13,7 +13,7 @@ export default function Page({}) {
     isReady,
   } = useRouter();
 
-  const queryId = typeof petId === "string" ? parseInt(petId) : 0;
+  const queryId = typeof petId === "string" ? petId : "bad vibes";
 
   const { data, isLoading, isError, error } = api.pets.findById.useQuery(
     queryId,
@@ -36,9 +36,6 @@ export default function Page({}) {
       {isLoading && <p>Looking...</p>}
       {ready && (
         <div className="flex flex-col items-center">
-          <p className="text-2xl italic">
-            {`#${data.id.toFixed(0).padStart(3, "0")}`}
-          </p>
           <Dragoon data={data.apperance} />
           {is_yours && <p>There may be many like it, but this one is yours!</p>}
           {is_yours && (

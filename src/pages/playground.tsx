@@ -19,19 +19,26 @@ const CreatePet: NextPage = () => {
         <div className="flex items-center justify-center">
           <ul className="ml-4 mr-4 flex flex-row flex-wrap">
             {pets && status !== "loading"
-              ? pets.map(({ id, apperance, ownerId: owner, name }) => (
-                  <li key={id} className="m-1">
-                    <Link href={`/pets/${id}`}>
-                      <Dragoon data={apperance} />
-                      <p>{name}</p>
-                      {session?.user.id == owner ? (
-                        <p>Your pet</p>
-                      ) : (
-                        <p>Owner: {owner}</p>
-                      )}
-                    </Link>
-                  </li>
-                ))
+              ? pets.map(
+                  ({
+                    id,
+                    apperance,
+                    owner: { id: ownerId, username },
+                    name,
+                  }) => (
+                    <li key={id} className="m-1">
+                      <Link href={`/pets/${id}`}>
+                        <Dragoon data={apperance} />
+                        <p>{name}</p>
+                        {session?.user.id == ownerId ? (
+                          <p>Your pet</p>
+                        ) : (
+                          <p>Owner: {username}</p>
+                        )}
+                      </Link>
+                    </li>
+                  )
+                )
               : loading_skeletons}
           </ul>
         </div>

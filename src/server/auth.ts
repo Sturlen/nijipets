@@ -96,7 +96,7 @@ export const authOptions: NextAuthOptions = {
 
           if (existing_user.password_hash === credentials.password) {
             return {
-              id: existing_user.id.toString(),
+              id: existing_user.id,
               name: existing_user.username,
               email: null,
             } as User;
