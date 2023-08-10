@@ -23,6 +23,7 @@ specifiers:
   dotenv: ^16.3.0
   drizzle-kit: ^0.19.12
   drizzle-orm: 0.28.1
+  drizzle-zod: ^0.5.0
   eslint: ^8.43.0
   eslint-config-next: ^13.4.6
   next: ^13.4.6
@@ -52,6 +53,7 @@ dependencies:
   concurrently: 8.2.0
   dotenv: 16.3.1
   drizzle-orm: 0.28.1_lr6vyv4aqegsl2w2fwj7vqogbi
+  drizzle-zod: 0.5.0_2oc62ohpglyvzntzbxzamyxbie
   next: 13.4.13_biqbaboplfbrettd7655fr4n2y
   next-auth: 4.22.5_7bxrc77cqw5efxjm7xsv6oi4pi
   next-typesafe-url: 4.0.1_au5oxjp2l7obidig32dqwqdu7m
@@ -1680,6 +1682,16 @@ packages:
         optional: true
     dependencies:
       '@planetscale/database': 1.10.0
+    dev: false
+
+  /drizzle-zod/0.5.0_2oc62ohpglyvzntzbxzamyxbie:
+    resolution: {integrity: sha512-gIOXclphhaleYFEGZFxSyJBoiPRyksGyIPgmgWz6a+j5JeaOrOf1QOPjf1p5AHYA+1O3Q01ondGOZfgObxBTsg==}
+    peerDependencies:
+      drizzle-orm: '>=0.23.13'
+      zod: '*'
+    dependencies:
+      drizzle-orm: 0.28.1_lr6vyv4aqegsl2w2fwj7vqogbi
+      zod: 3.21.4
     dev: false
 
   /electron-to-chromium/1.4.490:

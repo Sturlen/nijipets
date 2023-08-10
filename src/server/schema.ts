@@ -1,4 +1,5 @@
 import { relations } from "drizzle-orm";
+import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 import {
   int,
   mysqlTable,
@@ -6,13 +7,14 @@ import {
   uniqueIndex,
   varchar,
 } from "drizzle-orm/mysql-core";
+import { z } from "zod";
 
 // declaring enum in database
 export const users = mysqlTable(
   "users",
   {
-    id: serial("id").primaryKey(),
-    username: varchar("username", { length: 256 }).notNull(),
+    id: varchar("id", { length: 24 }).primaryKey(), //cuid2
+    username: varchar("username", { length: 256 }).unique().notNull(),
     password_hash: varchar("password_hash", { length: 256 }).notNull(),
   },
   (users) => ({
@@ -24,10 +26,21 @@ export const usersRelations = relations(users, ({ many }) => ({
   pets: many(pets),
 }));
 
+export const UserIdSchema = z.string().cuid2().brand("UserId");
+export type UserId = z.infer<typeof UserIdSchema>;
+
+export const insertUserSchema = createInsertSchema(users, {
+  id: z.string().cuid2(),
+  username: z.string().nonempty(),
+  password_hash: z.string().nonempty(),
+});
+
+export type InsertUser = z.infer<typeof insertUserSchema>;
+
 export const pets = mysqlTable("pets", {
   id: serial("id").primaryKey(),
   name: varchar("name", { length: 256 }).notNull(),
-  ownerId: int("owner_id").notNull(),
+  ownerId: varchar("owner_id", { length: 24 }), // cuid2
   color: varchar("color", { length: 7 }).notNull(),
   glasses: int("glasses").notNull(),
 });
@@ -38,3 +51,6 @@ export const petsRelations = relations(pets, ({ one }) => ({
     references: [users.id],
   }),
 }));
+
+export const PetIdSchema = z.string().cuid2().brand("PetId");
+export type PetId = z.infer<typeof PetIdSchema>;

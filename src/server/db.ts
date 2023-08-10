@@ -7,6 +7,7 @@ import * as schema from "./schema";
 import { eq, getTableColumns } from "drizzle-orm";
 import { z } from "zod";
 import type { User } from "next-auth";
+import { createId } from "@paralleldrive/cuid2";
 
 // create the connection
 const connection = connect({
@@ -15,7 +16,7 @@ const connection = connect({
 
 export const db = drizzle(connection, { schema });
 
-export async function petsByOwnerId(userId: number) {
+export async function petsByOwnerId(userId: schema.UserId) {
   const { color, glasses } = getTableColumns(pets);
   const pets_result: PetApperance[] = await db
     .select({ color, glasses })
@@ -37,23 +38,18 @@ export async function createNewUser(credentials: Credentials) {
   try {
     console.log("Creating new User with username:", credentials.username);
 
-    await db.insert(users).values({
+    const id = createId();
+
+    const user = schema.insertUserSchema.parse({
+      id: id,
       username: credentials.username,
       password_hash: credentials.password,
     });
-    console.log("fetch newly created user", credentials.username);
-    const { id, username } = getTableColumns(users);
-    const [user] = await db
-      .select({ id, username })
-      .from(users)
-      .where(eq(users.username, credentials.username));
 
-    if (!user) {
-      throw new Error("Could not fetch newly created user");
-    }
+    await db.insert(users).values(user);
 
     return {
-      id: user.id.toString(),
+      id: user.id,
       name: user.username,
       email: null,
     } as User;

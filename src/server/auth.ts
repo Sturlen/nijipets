@@ -110,7 +110,7 @@ export const authOptions: NextAuthOptions = {
           console.log("newly created user returned");
 
           return {
-            id: user.id.toString(),
+            id: user.id,
             name: user.name,
             email: null,
           } as User;

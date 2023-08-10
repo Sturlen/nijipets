@@ -5,36 +5,33 @@ import {
   protectedProcedure,
 } from "~/server/api/trpc";
 
-import { pets } from "~/server/schema";
+import { UserIdSchema, pets } from "~/server/schema";
 import { and, eq } from "drizzle-orm";
 import { db, petsByOwnerId } from "~/server/db";
 import {
   DefaultPetAppearance,
   PetSchema,
   type PetApperance,
-  Pet,
   PetIdSchema,
 } from "~/types";
 import { TRPCError } from "@trpc/server";
 
 export const petRouter = createTRPCRouter({
-  petbyOwnerId: publicProcedure
-    .input(z.string().transform((arg) => parseInt(arg)))
-    .query(async ({ input }) => {
-      const [firstPet] = await db
-        .select()
-        .from(pets)
-        .where(eq(pets.ownerId, input));
-      if (firstPet) {
-        const pet_data: PetApperance = {
-          color: firstPet.color || DefaultPetAppearance.color,
-          glasses: firstPet.glasses || DefaultPetAppearance.glasses,
-        };
-        return pet_data;
-      } else {
-        throw new TRPCError({ code: "NOT_FOUND" });
-      }
-    }),
+  petbyOwnerId: publicProcedure.input(UserIdSchema).query(async ({ input }) => {
+    const [firstPet] = await db
+      .select()
+      .from(pets)
+      .where(eq(pets.ownerId, input));
+    if (firstPet) {
+      const pet_data: PetApperance = {
+        color: firstPet.color || DefaultPetAppearance.color,
+        glasses: firstPet.glasses || DefaultPetAppearance.glasses,
+      };
+      return pet_data;
+    } else {
+      throw new TRPCError({ code: "NOT_FOUND" });
+    }
+  }),
 
   findById: publicProcedure
     .input(PetIdSchema)
@@ -67,7 +64,7 @@ export const petRouter = createTRPCRouter({
     )
     .mutation(async ({ input, ctx }) => {
       const { id, color, glasses } = input;
-      const userId = parseInt(ctx.session.user.id);
+      const userId = ctx.session.user.id;
       console.log("Color", input, userId);
 
       await db
@@ -84,7 +81,7 @@ export const petRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ input, ctx }) => {
-      const userId = parseInt(ctx.session.user.id);
+      const userId = ctx.session.user.id;
 
       await db.insert(pets).values({
         name: "goon",
@@ -117,9 +114,7 @@ export const petRouter = createTRPCRouter({
     }),
 
   listByOwner: publicProcedure
-    .input(
-      z.object({ ownerUserId: z.string().transform((arg) => parseInt(arg)) })
-    )
+    .input(z.object({ ownerUserId: UserIdSchema }))
     .query(async ({ input: { ownerUserId } }) => {
       return await petsByOwnerId(ownerUserId);
     }),

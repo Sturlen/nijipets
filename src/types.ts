@@ -9,10 +9,11 @@ export type PetApperance = z.infer<typeof PetApperanceSchema>;
 
 export const PetIdSchema = z.number({ coerce: true }).int().min(0).brand("pet");
 
+/** @deprecated */
 export const PetSchema = z.object({
   id: PetIdSchema,
   name: z.string().nonempty(),
-  ownerId: z.number({ coerce: true }).int(),
+  ownerId: z.string(),
   apperance: PetApperanceSchema,
 });
 
