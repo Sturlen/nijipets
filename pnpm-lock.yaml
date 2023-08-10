@@ -20,8 +20,8 @@ specifiers:
   autoprefixer: ^10.4.14
   concurrently: ^8.2.0
   dotenv: ^16.3.0
-  drizzle-kit: ^0.19.2
-  drizzle-orm: ^0.27.0
+  drizzle-kit: ^0.19.12
+  drizzle-orm: 0.28.1
   eslint: ^8.43.0
   eslint-config-next: ^13.4.6
   next: ^13.4.6
@@ -49,7 +49,7 @@ dependencies:
   '@vercel/analytics': 1.0.1
   concurrently: 8.2.0
   dotenv: 16.3.0
-  drizzle-orm: 0.27.0_x5zvu6yhqtclhr76ddvo6x3wgi
+  drizzle-orm: 0.28.1_x5zvu6yhqtclhr76ddvo6x3wgi
   next: 13.4.6_biqbaboplfbrettd7655fr4n2y
   next-auth: 4.22.1_beomsnwnvoyap5ewkkd5o2pmcm
   next-typesafe-url: 4.0.1_5pj5fy6yp4oqt4duotnkhu3lui
@@ -67,7 +67,7 @@ devDependencies:
   '@typescript-eslint/eslint-plugin': 5.59.11_pvitu2ol4qmol2rndkdcil6mvu
   '@typescript-eslint/parser': 5.59.11_7yfldhli4vs6yywnkyiujhawka
   autoprefixer: 10.4.14_postcss@8.4.24
-  drizzle-kit: 0.19.2
+  drizzle-kit: 0.19.12
   eslint: 8.43.0
   eslint-config-next: 13.4.6_7yfldhli4vs6yywnkyiujhawka
   postcss: 8.4.24
@@ -109,6 +109,10 @@ packages:
     engines: {node: '>=6.9.0'}
     dependencies:
       regenerator-runtime: 0.13.11
+
+  /@drizzle-team/studio/0.0.5:
+    resolution: {integrity: sha512-ps5qF0tMxWRVu+V5gvCRrQNqlY92aTnIKdq27gm9LZMSdaKYZt6AVvSK1dlUMzs6Rt0Jm80b+eWct6xShBKhIw==}
+    dev: true
 
   /@esbuild-kit/core-utils/3.1.0:
     resolution: {integrity: sha512-Uuk8RpCg/7fdHSceR1M6XbSZFSuMrxcePFuGgyvsBn+u339dk5OeL4jv2EojwTN2st/unJGsVm4qHWjWNmJ/tw==}
@@ -1609,10 +1613,11 @@ packages:
       wordwrap: 1.0.0
     dev: true
 
-  /drizzle-kit/0.19.2:
-    resolution: {integrity: sha512-o+T/+Xc6hlLj2ocvGEo3kyWgTIAFjmsVK/HdBjU7gmbolmFZHv6T3lhaAsAD4mWfOX69uC7IggCmIqLq+zcM4Q==}
+  /drizzle-kit/0.19.12:
+    resolution: {integrity: sha512-rcsmh5gUIkvuD0WrbEc+aLpqY2q2J8ltynRcJiJo2l01hhsYvPnX0sgxWlFXlfAIa5ZXNw2nJZhYlslI6tG3MA==}
     hasBin: true
     dependencies:
+      '@drizzle-team/studio': 0.0.5
       '@esbuild-kit/esm-loader': 2.5.5
       camelcase: 7.0.1
       chalk: 5.2.0
@@ -1628,8 +1633,8 @@ packages:
       - supports-color
     dev: true
 
-  /drizzle-orm/0.27.0_x5zvu6yhqtclhr76ddvo6x3wgi:
-    resolution: {integrity: sha512-LGiJ0icB+wQwgbSCOvAjONY8Ec6G/EDzQQP5PmUaQYeI9OqgpVKHC2T1fFIbvk5dabWsbokJ5NOciVAxriStig==}
+  /drizzle-orm/0.28.1_x5zvu6yhqtclhr76ddvo6x3wgi:
+    resolution: {integrity: sha512-6ms2pVxvkBJtuP1BZTUCzLLkr+iK/cNgd+tCw+I5/PoM8PB9kXaYoW9yNe/cnaXb0TLJ1gDEndDIyQdRX7zCdQ==}
     peerDependencies:
       '@aws-sdk/client-rds-data': '>=3'
       '@cloudflare/workers-types': '>=3'
