@@ -1,13 +1,9 @@
 import { type GetServerSideProps } from "next";
-import { useSession } from "next-auth/react";
-import { $path } from "next-typesafe-url";
-import Image from "next/image";
 import { useRouter } from "next/router";
-import Dragoon from "~/c/Dragoon";
 import PetEditor from "~/c/PetEditor";
 import { appRouter } from "~/server/api/root";
 import { getServerAuthSession } from "~/server/auth";
-import { PetIdSchema } from "~/types";
+import { PetIdSchema } from "~/server/schema";
 
 import { api, type RouterOutputs } from "~/utils/api";
 
@@ -20,8 +16,6 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     throw new Error("bad request");
   }
 
-  const petId = parseInt(petId_raw);
-
   const session = await getServerAuthSession(ctx);
 
   if (!session) {
@@ -33,7 +27,9 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     };
   }
 
-  const pet = await appRouter.createCaller({ session }).pets.findById(petId);
+  const pet = await appRouter
+    .createCaller({ session })
+    .pets.findById(petId_raw);
 
   if (!pet) {
     throw new Error("Not Found");
