@@ -1,6 +1,12 @@
 import { relations } from "drizzle-orm";
-import { createInsertSchema } from "drizzle-zod";
-import { int, mysqlTable, uniqueIndex, varchar } from "drizzle-orm/mysql-core";
+import { createInsertSchema, createSelectSchema } from "drizzle-zod";
+import {
+  int,
+  mysqlTable,
+  uniqueIndex,
+  varchar,
+  timestamp,
+} from "drizzle-orm/mysql-core";
 import { z } from "zod";
 
 // declaring enum in database
@@ -10,6 +16,7 @@ export const users = mysqlTable(
     id: varchar("id", { length: 24 }).primaryKey(), //cuid2
     username: varchar("username", { length: 256 }).unique().notNull(),
     password_hash: varchar("password_hash", { length: 256 }).notNull(),
+    created_at: timestamp("created_at").defaultNow().notNull(),
   },
   (users) => ({
     nameIndex: uniqueIndex("name_idx").on(users.username),
@@ -24,10 +31,16 @@ export const UserIdSchema = z.string().cuid2().brand("UserId");
 export type UserId = z.infer<typeof UserIdSchema>;
 
 export const insertUserSchema = createInsertSchema(users, {
-  id: z.string().cuid2(),
+  id: UserIdSchema,
   username: z.string().nonempty(),
   password_hash: z.string().nonempty(),
 });
+
+export const selectUserSchema = createSelectSchema(users, {
+  id: UserIdSchema,
+});
+
+export type SelectUser = z.infer<typeof selectUserSchema>;
 
 export type InsertUser = z.infer<typeof insertUserSchema>;
 
