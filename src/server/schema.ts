@@ -27,7 +27,7 @@ export const usersRelations = relations(users, ({ many }) => ({
   pets: many(pets),
 }));
 
-export const UserIdSchema = z.string().cuid2().brand("UserId");
+export const UserIdSchema = z.string().cuid2("Invalid UserId").brand("UserId");
 export type UserId = z.infer<typeof UserIdSchema>;
 
 export const insertUserSchema = createInsertSchema(users, {
@@ -59,7 +59,7 @@ export const petsRelations = relations(pets, ({ one }) => ({
   }),
 }));
 
-export const PetIdSchema = z.string().cuid2().brand("PetId");
+export const PetIdSchema = z.string().cuid2("Invalid PetId").brand("PetId");
 export type PetId = z.infer<typeof PetIdSchema>;
 
 export const insertPetSchema = createInsertSchema(pets, {
