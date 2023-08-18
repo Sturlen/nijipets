@@ -10,7 +10,7 @@ const Home: NextPage = () => {
         <meta name="description" content="Less neo, more niji" />
       </Head>
       <main className="flex flex-grow flex-col items-center bg-white p-4">
-        <h2 className="text-xl">Work In Progress</h2>
+        <h2 className="text-xl">Work In Progress!!!</h2>
         <p>
           {
             "Only real function is creating a pet, which can be done with clicking on PETS on the left. You have to be logged in to do this, make up whatever username/password you like"
