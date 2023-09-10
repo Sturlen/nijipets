@@ -1,6 +1,5 @@
-import { signIn, signOut, useSession } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 import { $path } from "next-typesafe-url";
-import Link from "next/link";
 import SignedIn from "./SignedIn";
 import SignedOut from "./SignedOut";
 import { useRouter } from "next/router";
@@ -20,14 +19,19 @@ const SignInButton: React.FC = () => {
       )}
 
       <SignedOut>
-        <Link
+        <button
           className="rounded-sm bg-white/30 px-10 py-3 text-4xl font-bold text-black no-underline transition hover:scale-105 hover:bg-white/40"
-          href={$path({
-            route: "/auth/sign-up",
-          })}
+          onClick={() => {
+            void push(
+              $path({
+                route: "/auth/sign-up",
+                searchParams: { callbackUrl: window.location.href },
+              })
+            );
+          }}
         >
           Sign Up
-        </Link>
+        </button>
         <button
           className="rounded-sm bg-white/10 px-10 py-3 text-4xl font-bold text-black no-underline transition hover:scale-105 hover:bg-white/20"
           onClick={() => {

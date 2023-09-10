@@ -7,15 +7,16 @@
 /* eslint-disable */
 
 import { type RouteType as Route_0 } from "./src/pages/auth/sign-in";
+import { type RouteType as Route_1 } from "./src/pages/auth/sign-up";
 import type { InferRoute, StaticRoute } from "next-typesafe-url";
 
 declare module "@@@next-typesafe-url" {
   interface DynamicRouter {
     "/auth/sign-in": InferRoute<Route_0>;
+    "/auth/sign-up": InferRoute<Route_1>;
   }
 
   interface StaticRouter {
-    "/auth/sign-up": StaticRoute;
     "/createagoon": StaticRoute;
     "/dressup/[petId]": StaticRoute;
     "/": StaticRoute;

@@ -5,6 +5,15 @@ import type {
 import { getCsrfToken, signIn } from "next-auth/react";
 import { useRouter } from "next/router";
 import { useState } from "react";
+import { $path, type DynamicRoute } from "next-typesafe-url";
+import { z } from "zod";
+
+const Route = {
+  searchParams: z.object({
+    callbackUrl: z.string().nullish(),
+  }),
+} satisfies DynamicRoute;
+export type RouteType = typeof Route;
 
 export default function SignIn({
   csrfToken,
@@ -69,6 +78,16 @@ export default function SignIn({
         </label>
         <button type="submit" className="rounded-sm border">
           Sign Up
+        </button>
+        <span className="mt-4 h-0 border bg-black" />
+        <button
+          onClick={(e) => {
+            e.preventDefault();
+            void push($path({ route: "/auth/sign-in" }));
+          }}
+          className="mt-4 italic text-blue-400 hover:text-blue-300"
+        >
+          Existing user
         </button>
       </form>
     </div>
