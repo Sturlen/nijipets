@@ -6,11 +6,12 @@
 // prettier-ignore
 /* eslint-disable */
 
+import { type RouteType as Route_0 } from "./src/pages/auth/sign-in";
 import type { InferRoute, StaticRoute } from "next-typesafe-url";
 
 declare module "@@@next-typesafe-url" {
   interface DynamicRouter {
-  
+    "/auth/sign-in": InferRoute<Route_0>;
   }
 
   interface StaticRouter {

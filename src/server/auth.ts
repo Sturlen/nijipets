@@ -9,6 +9,7 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import { CredentialsSchema, createNewUser, db } from "~/server/db";
 import { users } from "./schema";
 import { eq } from "drizzle-orm";
+import { $path } from "next-typesafe-url";
 
 /**
  * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`
@@ -64,7 +65,12 @@ export const authOptions: NextAuthOptions = {
       );
     },
   },
-  pages: { newUser: "/auth/sign-up" },
+  pages: {
+    newUser: $path({ route: "/pets" }),
+    signIn: $path({ route: "/auth/sign-in" }),
+    error: $path({ route: "/auth/sign-in" }),
+    signOut: $path({ route: "/" }),
+  },
   providers: [
     CredentialsProvider({
       id: "credentials",

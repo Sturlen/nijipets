@@ -5,6 +5,15 @@ import type {
 import { getCsrfToken, signIn } from "next-auth/react";
 import { useRouter } from "next/router";
 import { useState } from "react";
+import { $path, type DynamicRoute } from "next-typesafe-url";
+import { z } from "zod";
+
+const Route = {
+  searchParams: z.object({
+    callbackUrl: z.string().nullish(),
+  }),
+} satisfies DynamicRoute;
+export type RouteType = typeof Route;
 
 export default function SignIn({
   csrfToken,
@@ -14,9 +23,8 @@ export default function SignIn({
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
-  const sign_up_submit = async () => {
+  const sign_in_submit = async () => {
     const auth_params = new URLSearchParams();
-    auth_params.set("sign-up", "true");
     const res = await signIn(
       "credentials",
       {
@@ -27,10 +35,10 @@ export default function SignIn({
       auth_params
     );
     if (res?.error) {
-      console.error("signup fail", res.error, res.url);
+      console.error("signin fail", res.error, res.url);
     } else if (res?.ok) {
-      console.log("Signup success");
-      await push(res.url || "/");
+      console.log("Signin success");
+      await push("/");
     }
   };
 
@@ -42,16 +50,17 @@ export default function SignIn({
         className="flex flex-col rounded-md bg-white p-8 font-bold"
         onSubmit={(e) => {
           e.preventDefault();
-          void sign_up_submit();
+          void sign_in_submit();
         }}
       >
-        <h1 className="mb-4 text-xl">Create a nijipets account</h1>
+        <h1 className="mb-4 text-xl">Sign in to nijipets</h1>
         <input name="csrfToken" type="hidden" defaultValue={csrfToken} />
         <label className="mb-4 font-bold">
           Username
           <input
             name="username"
             type="text"
+            required={true}
             value={username}
             onChange={(e) => setUsername(e.target.value)}
             className="block border-spacing-1 border-2"
@@ -62,13 +71,24 @@ export default function SignIn({
           <input
             name="password"
             type="password"
+            required={true}
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             className="block border-spacing-1 border-2"
           />
         </label>
         <button type="submit" className="rounded-sm border">
-          Sign Up
+          Sign in
+        </button>
+        <span className="mt-4 h-0 border bg-black" />
+        <button
+          onClick={(e) => {
+            e.preventDefault();
+            void push($path({ route: "/auth/sign-up" }));
+          }}
+          className="mt-4 italic text-blue-400 hover:text-blue-300"
+        >
+          Create account
         </button>
       </form>
     </div>
