@@ -14,6 +14,7 @@ declare module "@@@next-typesafe-url" {
   }
 
   interface StaticRouter {
+    "/auth/sign-up": StaticRoute;
     "/createagoon": StaticRoute;
     "/dressup/[petId]": StaticRoute;
     "/": StaticRoute;

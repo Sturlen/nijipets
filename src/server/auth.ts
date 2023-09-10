@@ -64,8 +64,10 @@ export const authOptions: NextAuthOptions = {
       );
     },
   },
+  pages: { newUser: "/auth/sign-up" },
   providers: [
     CredentialsProvider({
+      id: "credentials",
       // The name to display on the sign in form (e.g. "Sign in with...")
       name: "Credentials",
       // `credentials` is used to generate a form on the sign in page.
@@ -83,6 +85,7 @@ export const authOptions: NextAuthOptions = {
         password: { label: "Password", type: "password", required: "required" },
       },
       async authorize(raw_credentials, _req) {
+        console.log("AUTH BEGIN", _req.query, raw_credentials);
         const credentials = CredentialsSchema.parse(raw_credentials);
 
         const result = await db
@@ -90,6 +93,14 @@ export const authOptions: NextAuthOptions = {
           .from(users)
           .where(eq(users.username, credentials.username));
         const existing_user = result[0];
+
+        if (_req.query?.["sign-up"]) {
+          console.log("[SIGNUP]");
+          if (existing_user) {
+            console.log("Signup failed: User Already Exists");
+            throw new Error("UserExists");
+          }
+        }
 
         if (existing_user) {
           console.log("user already exists");
