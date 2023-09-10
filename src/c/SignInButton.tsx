@@ -7,25 +7,21 @@ import SignedOut from "./SignedOut";
 const SignInButton: React.FC = () => {
   const { data: sessionData } = useSession();
 
-  const img_src = sessionData?.user.image || undefined;
-
   return (
     <>
       {sessionData && (
         <>
           <p className="text-4xl font-bold text-black">
-            Welcome, {sessionData.user.name || undefined}!
+            Welcome, {sessionData.user.name}!
           </p>
         </>
       )}
-      {img_src && <img className="h-8 w-8 rounded-full" src={img_src} alt="" />}
 
       <SignedOut>
         <Link
           className="rounded-sm bg-white/10 px-10 py-3 text-4xl font-bold text-black no-underline transition hover:scale-105 hover:bg-white/20"
           href={$path({
             route: "/auth/sign-up",
-            searchParams: { callbackUrl: "/pets" },
           })}
         >
           Sign Up

@@ -9,11 +9,7 @@ import { useState } from "react";
 export default function SignIn({
   csrfToken,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
-  const {
-    push,
-    query: { callbackUrl },
-    isReady,
-  } = useRouter();
+  const { push } = useRouter();
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
