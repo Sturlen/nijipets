@@ -7,6 +7,7 @@ import { useRouter } from "next/router";
 import { useState } from "react";
 import { $path, type DynamicRoute } from "next-typesafe-url";
 import { z } from "zod";
+import { useSearchParams } from "~/hooks/router";
 
 const Route = {
   searchParams: z.object({
@@ -19,6 +20,9 @@ export default function SignIn({
   csrfToken,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const { push } = useRouter();
+  const { data } = useSearchParams(Route.searchParams);
+
+  const callbackUrl = data?.callbackUrl || $path({ route: "/pets" });
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -31,6 +35,7 @@ export default function SignIn({
         username: username,
         password: password,
         redirect: false,
+        callbackUrl,
       },
       auth_params
     );
@@ -38,7 +43,7 @@ export default function SignIn({
       console.error("signin fail", res.error, res.url);
     } else if (res?.ok) {
       console.log("Signin success");
-      await push("/");
+      await push(callbackUrl);
     }
   };
 
@@ -84,7 +89,9 @@ export default function SignIn({
         <button
           onClick={(e) => {
             e.preventDefault();
-            void push($path({ route: "/auth/sign-up" }));
+            void push(
+              $path({ route: "/auth/sign-up", searchParams: { callbackUrl } })
+            );
           }}
           className="mt-4 italic text-blue-400 hover:text-blue-300"
         >
