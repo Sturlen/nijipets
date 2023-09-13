@@ -6,7 +6,7 @@ type SignedOutProps = {
 };
 
 const SignedOut: React.FC<SignedOutProps> = ({ children }) => {
-  const { data: sessionData, status } = useSession();
+  const { status } = useSession();
   const is_signed_out = status == "unauthenticated";
 
   return <>{is_signed_out && children}</>;

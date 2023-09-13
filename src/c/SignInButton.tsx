@@ -55,10 +55,7 @@ const SignInButton: React.FC = () => {
 };
 
 const UserButton: React.FC = () => {
-  const { data: userData, isLoading } = api.pets.userHeader.useQuery(
-    undefined,
-    {}
-  );
+  const { data: userData } = api.pets.userHeader.useQuery();
   return (
     <>
       {userData && (

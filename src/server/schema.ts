@@ -1,12 +1,6 @@
 import { relations } from "drizzle-orm";
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
-import {
-  int,
-  mysqlTable,
-  uniqueIndex,
-  varchar,
-  timestamp,
-} from "drizzle-orm/mysql-core";
+import { int, mysqlTable, uniqueIndex, varchar } from "drizzle-orm/mysql-core";
 import { z } from "zod";
 
 // declaring enum in database

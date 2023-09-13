@@ -16,26 +16,32 @@ const CreatePet: NextPage = () => {
         <meta name="description" content="Play with other pets!" />
       </Head>
       <main className="w-full bg-white">
+        <h1 className="bold text-center text-4xl font-bold text-black">
+          The playground
+        </h1>
         <div className="flex items-center justify-center">
-          <ul className="ml-4 mr-4 flex flex-row flex-wrap">
+          <ul className="ml-4 mr-4 flex flex-row flex-wrap gap-2">
             {pets && status !== "loading"
               ? pets.map(
+                  // TODO: this should be it's own list component.
                   ({
                     id,
                     apperance,
                     owner: { id: ownerId, username },
                     name,
                   }) => (
-                    <li key={id} className="m-1">
+                    <li key={id} className="p-1">
                       <Link href={`/pets/${id}`}>
-                        <Dragoon data={apperance} />
-                        <p>{name}</p>
-                        {session?.user.id == ownerId ? (
-                          <p>Your pet</p>
-                        ) : (
-                          <p>Owner: {username}</p>
-                        )}
+                        <div className="rounded-md p-4 hover:bg-slate-500/10">
+                          <Dragoon data={apperance} />
+                        </div>
                       </Link>
+                      <p>{name}</p>
+                      <p>
+                        {session?.user.id == ownerId
+                          ? "Your pet"
+                          : `Owner: ${username}`}
+                      </p>
                     </li>
                   )
                 )
