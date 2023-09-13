@@ -8,8 +8,9 @@ type SignedInProps = {
 };
 
 const SignedIn: React.FC<SignedInProps> = ({ children }) => {
-  const { data: sessionData } = useSession();
+  const { data: sessionData, status } = useSession();
   const userId = sessionData?.user.id;
+  const is_signed_in = status == "authenticated";
 
   function render() {
     if (!userId) {
@@ -23,7 +24,7 @@ const SignedIn: React.FC<SignedInProps> = ({ children }) => {
     }
   }
 
-  return <>{render()}</>;
+  return <>{is_signed_in && render()}</>;
 };
 
 export default SignedIn;

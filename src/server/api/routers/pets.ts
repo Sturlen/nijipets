@@ -116,4 +116,12 @@ export const petRouter = createTRPCRouter({
         with: { pets: true },
       });
     }),
+
+  userHeader: protectedProcedure.query(async ({ ctx }) => {
+    const userId = ctx.session.user.id;
+    return await db.query.users.findFirst({
+      columns: { username: true, coins: true },
+      where: (users, { eq }) => eq(users.id, userId),
+    });
+  }),
 });

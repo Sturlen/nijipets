@@ -16,7 +16,8 @@ export const users = mysqlTable(
     id: varchar("id", { length: 24 }).primaryKey(), //cuid2
     username: varchar("username", { length: 256 }).unique().notNull(),
     password_hash: varchar("password_hash", { length: 256 }).notNull(),
-    created_at: timestamp("created_at").defaultNow().notNull(),
+    // created_at: timestamp("created_at").defaultNow().notNull(), // Invalid default value for 'created_at'
+    coins: int("coins").default(0),
   },
   (users) => ({
     nameIndex: uniqueIndex("name_idx").on(users.username),
