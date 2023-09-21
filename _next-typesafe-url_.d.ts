@@ -20,6 +20,8 @@ declare module "@@@next-typesafe-url" {
     "/createagoon": StaticRoute;
     "/dressup/[petId]": StaticRoute;
     "/": StaticRoute;
+    "/minigames/button": StaticRoute;
+    "/minigames": StaticRoute;
     "/nijiexpress": StaticRoute;
     "/petcreator": StaticRoute;
     "/pets": StaticRoute;

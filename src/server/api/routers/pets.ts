@@ -10,6 +10,7 @@ import {
   insertPetSchema,
   pets,
   PetIdSchema,
+  users,
 } from "~/server/schema";
 import { and, eq } from "drizzle-orm";
 import { db } from "~/server/db";
@@ -123,5 +124,22 @@ export const petRouter = createTRPCRouter({
       columns: { username: true, coins: true },
       where: (users, { eq }) => eq(users.id, userId),
     });
+  }),
+  minigameComplete: protectedProcedure.mutation(async ({ ctx }) => {
+    // probably need to star a session to verify
+    const userId = ctx.session.user.id;
+    const coins = (
+      await db.query.users.findFirst({
+        columns: { coins: true },
+        where: (users, { eq }) => eq(users.id, userId),
+      })
+    )?.coins;
+    if (!coins) {
+      throw new TRPCError({ code: "NOT_FOUND" });
+    }
+    await db
+      .update(users)
+      .set({ coins: coins + 10 })
+      .where(eq(users.id, userId));
   }),
 });
