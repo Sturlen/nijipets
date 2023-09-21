@@ -6,6 +6,7 @@ const PETCREATOR_HREF = $path({ route: "/petcreator" });
 const NIJIEXPRESS_HREF = $path({ route: "/nijiexpress" });
 const PETS_HREF = $path({ route: "/pets" });
 const PLAYGROUND_HREF = $path({ route: "/playground" });
+const MINIGAMES_HREF = $path({ route: "/minigames" }); //TODO: make into ActiveLink component
 
 const Links: React.FC = () => {
   const router = useRouter();
@@ -47,6 +48,15 @@ const Links: React.FC = () => {
             }`}
           >
             The Playground
+          </span>
+        </Link>
+        <Link href={MINIGAMES_HREF}>
+          <span
+            className={`font-medium ${
+              router.pathname === MINIGAMES_HREF ? "underline" : ""
+            }`}
+          >
+            Minigames
           </span>
         </Link>
       </nav>
