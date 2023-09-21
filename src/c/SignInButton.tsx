@@ -4,6 +4,7 @@ import SignedIn from "./SignedIn";
 import SignedOut from "./SignedOut";
 import { useRouter } from "next/router";
 import { api } from "~/utils/api";
+import { useEffect, useRef, useState, useTransition } from "react";
 
 const SignInButton: React.FC = () => {
   const { push } = useRouter();
@@ -56,12 +57,43 @@ const SignInButton: React.FC = () => {
 
 const UserButton: React.FC = () => {
   const { data: userData } = api.pets.userHeader.useQuery();
+  const initial = useRef(true);
+  const [animating, setAnimating] = useState(false);
+  const coins = userData?.coins ?? undefined;
+
+  // ANIMATION TEST. Play an effect when you get coins. should be an easier way of doing this.
+  useEffect(() => {
+    if (coins == undefined) {
+      return;
+    }
+    if (initial.current) {
+      initial.current = false;
+      return;
+    }
+    console.log("COINS");
+    setAnimating(true);
+    const t = setTimeout(() => {
+      setAnimating(false);
+      console.log("COINS STOP");
+    }, 700);
+    return () => clearTimeout(t);
+  }, [coins]);
   return (
     <>
       {userData && (
         <>
           <span className="text-4xl font-bold text-black">
-            Welcome, {userData.username}! 🪙{userData.coins}
+            Welcome, {userData.username}!
+            <span
+              className={
+                animating
+                  ? "text-white transition-all"
+                  : "text-black transition-all"
+              }
+            >
+              {" "}
+              🪙{userData.coins}
+            </span>
           </span>
         </>
       )}
