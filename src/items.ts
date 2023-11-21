@@ -25,4 +25,12 @@ export const dragoon_glasses: ReadonlyArray<Readonly<PetItem>> = [
     name: "Mad Hatter",
     src: "/dragoon_1_hat_0.png",
   },
+  {
+    name: "Sprout",
+    src: "/dragoon_1_hat_1.png",
+  },
+  {
+    name: "Comfy Sweater",
+    src: "/dragoon_1_sweater.png",
+  },
 ];
