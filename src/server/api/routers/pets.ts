@@ -140,4 +140,38 @@ export const petRouter = createTRPCRouter({
       .set({ coins: coins + 10 })
       .where(eq(users.id, userId));
   }),
+  buyItem: protectedProcedure
+    .input(z.number())
+    .mutation(async ({ input: itemID, ctx }) => {
+      const userId = ctx.session.user.id;
+      const price = 10;
+
+      await db.transaction(async (tx) => {
+        const { coins } =
+          (await tx.query.users.findFirst({
+            columns: { coins: true },
+            where: (users, { eq }) => eq(users.id, userId),
+          })) ?? raise({ code: "NOT_FOUND", message: "User not found" });
+        const balance = coins || 0;
+
+        const new_balance = balance - price;
+
+        if (new_balance < 0) {
+          raise({
+            code: "BAD_REQUEST",
+            message: "Not enough coins",
+          });
+        }
+        await tx
+          .update(users)
+          .set({ coins: new_balance })
+          .where(eq(users.id, userId));
+      });
+
+      // add item to account.
+    }),
 });
+
+function raise(err: ConstructorParameters<typeof TRPCError>[0]): never {
+  throw new TRPCError(err);
+}

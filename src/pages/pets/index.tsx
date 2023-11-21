@@ -32,14 +32,27 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 /** View all your pets */
 export default function Page() {
   const { data: session } = useSession();
+  const utils = api.useContext();
 
   if (!session) {
     throw new Error("Unauthorized");
   }
 
+  const buyItemMutation = api.pets.buyItem.useMutation();
+
   const { data, isLoading, isError } = api.pets.listByOwner.useQuery({
     ownerUserId: session.user.id,
   });
+
+  const buyItem = async () => {
+    const itemId = 42;
+    try {
+      await buyItemMutation.mutateAsync(itemId);
+      await utils.pets.userHeader.refetch();
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   const pets = data?.pets;
 
@@ -74,6 +87,12 @@ export default function Page() {
         >
           Adopt a new pet
         </Link>
+        <button
+          className="m-4 box-border rounded-md border border-black p-2 hover:bg-slate-100"
+          onClick={() => void buyItem()}
+        >
+          Spend Coins
+        </button>
       </main>
     </>
   );
