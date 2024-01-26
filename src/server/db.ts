@@ -8,6 +8,7 @@ import * as schema from "./schema";
 import { z } from "zod";
 import type { User } from "next-auth";
 import { createId } from "@paralleldrive/cuid2";
+import { eq, sql } from "drizzle-orm";
 
 // create the connection
 const connection = connect({
@@ -59,4 +60,15 @@ export async function createNewUser(credentials: Credentials) {
 export async function authorizeExistingUser(a: string) {
   await Promise.resolve();
   return a;
+}
+
+export async function incrementCoins(
+  db: DB_TYPE,
+  userId: string,
+  amount: number
+) {
+  return await db
+    .update(users)
+    .set({ coins: sql`${users.coins} + ${amount}` })
+    .where(eq(users.id, userId));
 }

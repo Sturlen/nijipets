@@ -13,7 +13,7 @@ import {
   users,
 } from "~/server/schema";
 import { and, eq } from "drizzle-orm";
-import { db } from "~/server/db";
+import { db, incrementCoins } from "~/server/db";
 import { DefaultPetAppearance, type PetApperance } from "~/types";
 import { TRPCError } from "@trpc/server";
 import { createId } from "@paralleldrive/cuid2";
@@ -128,17 +128,8 @@ export const petRouter = createTRPCRouter({
   minigameComplete: protectedProcedure.mutation(async ({ ctx }) => {
     // probably need to star a session to verify
     const userId = ctx.session.user.id;
-    const coins =
-      (
-        await db.query.users.findFirst({
-          columns: { coins: true },
-          where: (users, { eq }) => eq(users.id, userId),
-        })
-      )?.coins || 0;
-    await db
-      .update(users)
-      .set({ coins: coins + 10 })
-      .where(eq(users.id, userId));
+    const reward = 10;
+    await incrementCoins(db, userId, reward);
   }),
   buyItem: protectedProcedure
     .input(z.number())
